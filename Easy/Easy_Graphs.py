@@ -13,3 +13,4 @@ class Node:
     	for x in self.children:
     		x.depthFirstSearch(arr)
     	return arr
+# if there are no children => return arr 
