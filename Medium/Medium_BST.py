@@ -141,6 +141,11 @@ class BST:
     				else:
     					pass # no children
     			elif parent.left == curr:
+				#  5
+    				# /
+    				#4 this to be removed
+    				# \
+    				#  3
     				parent.left = curr.left if curr.left is not None else curr.right
     			elif parent.right == cur:
     				parent.right = curr.left if curr.left is not None else curr.right
