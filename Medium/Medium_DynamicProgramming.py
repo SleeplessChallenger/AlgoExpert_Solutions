@@ -78,7 +78,7 @@ def numberOfWaysToTraverseGraph(width, height):
 				arr[idx2][idx1] = (left + right)
 	return arr[height][width]
 
-# 5
+# 5 Levenstein distance
 # mine
 def levenshteinDistance(str1, str2):
 	arr = [[0 for x in range(1, len(str1)+1)] for y in range(1, len(str2)+1)]
