@@ -27,3 +27,28 @@ def groupAnagrams(words):
 			result[key] = []
 		result[key].append(x)
 	return list(result.values())
+
+# 3 Valid IP Addresses
+def validIPAddress(string):
+	result = []
+	for x in range(1, len(string)):
+		temp = ['', '', '', '']
+		temp[0] = string[:x]
+		if not func(temp[0]):
+			continue
+		for y in range(x+1, x + min(len(string) - x, 4)):
+			temp[1] = string[x:y]
+			if not func(temp[1]):
+				continue
+			for z in range(y+1, y + min(len(string) - y, 4)):
+				temp[2] = string[y:z]
+				temp[3] = string[z:]
+				if func(temp[2]) and func(temp[3]):
+					result.append('.'.join(temp))
+	return result
+
+def func(arr):
+	int_arr = int(arr)
+	if int_arr > 255:
+		return False
+	return len(str(int_arr)) == len(arr)
