@@ -16,4 +16,14 @@ def func(string, i, j):
 		j += 1
 	return [i+1, j]
 # i is one index away from what we need
-# 4,7; 3,8; 2,9 -> break  
+# 4,7; 3,8; 2,9 -> break
+
+# 2 Group anagrams
+def groupAnagrams(words):
+	result = {}
+	for x in words:
+		key = ''.join(sorted(x))
+		if key not in result:
+			result[key] = []
+		result[key].append(x)
+	return list(result.values())
