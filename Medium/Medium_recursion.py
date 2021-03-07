@@ -38,3 +38,27 @@ def powerset(arr, idx=None):
 		temp = subs[x]
 		subs.append(temp + [ele])
 	return subs
+
+# 3 Phone Number Mnemonics
+hashtable = {'1': ['1'], '2': ['a','b','c'], '3': ['d','e','f'],
+			 '4': ['g','h','i'], '5': ['j','k','l'],
+			 '6': ['m','n','o'], '7': ['p','q','r','s'],
+			 '8': ['t','u','v'], '9': ['w','x','y','z'], '0': ['0']}
+
+def phoneNumberMnemonics(phone):
+	idx = 0
+	curr =['0'] * len(phone)
+	arr = []
+	helper(idx, curr, arr, phone)
+	return arr
+
+def helper(idx, curr, arr, phone):
+	if idx == len(phone):
+		temp = ''.join(curr)
+		arr.append(temp)
+	else:
+		digit = phone[idx]
+		letters = hashtable[digit]
+		for x in letters:
+			curr[idx] = x
+			helper(idx+1, curr, arr, phone)
