@@ -165,3 +165,102 @@ def func(direction, prev, curr):
 	if direction > 0:
 		return difference < 0
 	return difference > 0
+
+# 5 Spiral Traverse
+# iterative
+def spiralTraverse(arr):
+	result = []
+	st_r, end_r = 0, len(arr) - 1
+	st_c, end_c = 0, len(arr[0]) - 1
+	while st_r <= end_r and st_c <= end_c:
+		for a in range(st_c, end_c + 1):
+			result.append(arr[st_r][a])
+		for b in range(st_r + 1, end_r + 1):
+			result.append(arr[b][end_c])
+		for c in reversed(range(st_c, end_c)):
+			# end_c in range is exclusive 
+			# what we need not to double count
+			if st_r == end_r:
+				break
+			result.append(arr[end_r][c])
+		for d in reversed(range(st_r + 1, end_r)):
+			if st_r == end_r:
+				break
+			result.append(arr[d][st_c])
+		st_c += 1
+		end_c -= 1
+		st_r += 1
+		end_r -= 1
+	return result
+
+# recursive
+def spiralTraverse(arr):
+	result = 0
+	helper(arr, result, 0, len(arr) - 1, 0, len(arr[0]) - 1)
+	return result
+
+def helper(arr, result, st_r, end_r, st_c, end_c):
+	if st_r > end_r or st_c > end_c:
+		return
+	for a in range(st_c, end_c + 1):
+		result.append(arr[st_r][a])
+	for b in range(st_r + 1, end_r + 1):
+		result.append(arr[b][end_c])
+	for c in reversed(range(st_c, end_c)):
+		if st_r == end_r:
+			break
+		result.append(arr[end_r][c])
+	for d in reversed(range(st_r + 1, end_r)):
+		if st_c == end_c:
+			break
+		result.append(arr[d][st_c])
+	helper(arr, result, st_r + 1, end_r - 1, st_c + 1, end_c - 1)
+
+# 6 Longest Peak
+# mine
+def longestPeak(arr):
+	if len(arr) < 3:
+		return 0
+	current_left, current_right = 0, 0
+	longest = 0
+	for x in range(1, len(arr)):
+		left = x - 1
+		right = x + 1
+		while left >= 0:
+			if arr[left] < arr[left + 1] and arr[left] < arr[x]:
+				current_left += 1
+			else:
+				break
+			left -= 1
+		while right < len(arr) - 1:
+			if arr[right] < arr[right - 1] and arr[right] < arr[x]:
+				current_right += 1
+			else:
+				break
+			right += 1
+		if current_right == 0 or current_left == 0:
+			current_left, current_right = 0, 0
+			continue
+		longest = max(longest, current_left + current_right)
+		current_left, current_right = 0, 0
+	return 1 + longest if longest != 0 else 0
+
+# not mine
+def longestPeak(arr):
+	longest = 0
+	i = 1
+	while i < len(arr) - 1:
+		tip = arr[i] > arr[i - 1] and arr[i] > arr[i + 1]
+		if not tip:
+			i += 1
+			continue
+		left = i - 2
+		while left >= 0 and arr[left] < arr[left + 1]:
+			left -= 1
+		right = i + 2
+		while right < len(arr) and arr[right] < arr[right - 1]:
+			right += 1
+		curr = right - left - 1
+		longest = max(longest, curr)
+		i = right
+	return longest
