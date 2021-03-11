@@ -158,3 +158,45 @@ class BST:
    			if curr.left:
    				curr = curr.left
    		return curr.value
+
+# 5 Find Kth largest value in BST
+class BST:
+    def __init__(self, value, left=None, right=None):
+        self.value = value
+        self.left = left
+        self.right = right
+
+# Time & Space O(n)
+def findKthLargestValueInBst(tree, k):
+    arr = []
+    def traverse(node, arr):
+        if node.left:
+            traverse(node.left, arr)
+        arr.append(node.value)
+        if node.right:
+            traverse(node.right, arr)
+    traverse(tree, arr)
+    return arr[-k]
+
+# Time O(h + k) Space O(h)
+class Help:
+    def __init__(self, count, prev):
+        self.count = count
+        self.prev = prev
+
+
+def findKthLargestValueInBst(tree, k):
+    inst = Help(0, -1)
+    traverse(tree, k, inst)
+    return inst.prev
+
+def traverse(node, k, inst):
+    if not node or inst.count == k: # base case
+        return
+
+    traverse(node.right, k, inst)
+    if inst.count < k:
+    # if == then we return to initial function
+        inst.count += 1
+        inst.prev = node.value
+        traverse(node.left, k, inst)
