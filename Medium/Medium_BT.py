@@ -76,3 +76,44 @@ def dfs(node):
 	height = 1 + max(left.height, right.height)
 
 	return TreeInfo(balance, height)
+
+# 3 Find successor
+class BinaryTree:
+    def __init__(self, value, left=None, right=None, parent=None):
+        self.value = value
+        self.left = left
+        self.right = right
+        self.parent = parent
+
+# Space O(n)
+def findSuccessor(tree, node):
+	arr = []
+	def dfs(tree, arr):
+		if tree.left:
+			dfs(tree.left, arr)
+		arr.append(tree)
+		if tree.right:
+			dfs(tree.right, arr)
+	dfs(tree, arr)
+
+	for x in range(len(arr)):
+		if x == len(arr) - 1:
+			return None
+		if arr[x] == node:
+			return arr[x + 1]
+
+# Space O(1)
+def findSuccessor(tree, node):
+	if node.right:
+		return func1(node.right)
+	return func2(node)
+
+def func1(temp):
+	while temp.left:
+		temp = temp.left
+	return temp
+
+def func2(temp):
+	while temp.parent and temp.parent.right == temp:
+		temp = temp.parent
+	return temp.parent
