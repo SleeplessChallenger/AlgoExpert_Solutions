@@ -70,3 +70,38 @@ def runLengthEncoding(string):
 	result.append(str(counter))
 	result.append(string[len(string) - 1])
 	return ''.join(result)
+
+# 4 Generate document
+# mine
+def generateDocument(characters, document):
+	ht = {}
+
+	for x in characters:
+		if x in ht:
+			ht[x] += 1
+		else:
+			ht[x] = 1
+
+	for y in document:
+		if y not in ht or ht[y] == 0:
+			return False
+		else:
+			ht[y] -= 1
+	return True
+
+# not mine
+def generateDocument(characters, document):
+	for char in document:
+		num1 = fucn(char, document)
+		num2 = fucn(char, characters)
+
+		if num1 > num2:
+			return False
+	return True
+
+def fucn(target, st):
+	count = 0
+	for x in st:
+		if x == target:
+			count += 1
+	return count
