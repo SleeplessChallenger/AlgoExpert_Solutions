@@ -143,3 +143,43 @@ def removeKthNodeFromEnd(head, k):
         second = second.next
         first = first.next
     first.next = first.next.next
+
+# 3 Sum of Linked Lists
+class LinkedList:
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
+
+def sumOfLinkedLists(link1, link2):
+    # there are 3 scopes: link1, link2
+    # and our new LinkedList
+    newHead = LinkedList(0)
+    curr = newHead 
+    # we need to return .head
+    curr1 = link1
+    curr2 = link2
+    carry = 0
+
+    while curr1 or curr2 or carry != 0:
+        # take values of link1 and link2 nodes
+        nodeVal1 = curr1.value if curr1 else 0
+        nodeVal2 = curr2.value if curr2 else 0
+        total = nodeVal1 + nodeVal2 + carry
+
+        # take value without carry
+        newValue = total % 10
+        newNode = LinkedList(newValue)
+
+        # in our new LinkedList we place .next to 
+        # current node and make current node that .next one
+        curr.next = newNode
+        curr = newNode
+
+        # receive the very carry
+        carry = total // 10
+        curr1 = curr1.next if curr1 else None
+        curr2 = curr2.next if curr2 else None
+
+    return newHead.next
+
