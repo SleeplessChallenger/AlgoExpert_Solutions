@@ -264,3 +264,55 @@ def longestPeak(arr):
 		longest = max(longest, curr)
 		i = right
 	return longest
+
+# 7 Array of Products
+# mine
+def arrayOfProducts(arr):
+	new_arr = []
+	temp = 1
+	for x in range(len(arr)):
+		for y in reversed(range(len(arr))):
+			if x != y:
+				temp *= arr[y]
+		new_arr.append(temp)
+		temp = 1
+	return new_arr
+
+# not mine (a)
+def arrayOfProducts(arr):
+	new_arr = [1 for x in range(len(arr))]
+	new_arr1 = [1 for x in range(len(arr))]
+	new_arr2 = [1 for x in range(len(arr))]
+
+	curr = 1
+	# we put multiplied product to the left
+	# the left of arr[0] is 1
+	for x in range(len(arr)):
+		new_arr1[x] = curr
+		curr *= arr[x]
+
+	curr = 1
+	for x in reversed(range(len(arr))):
+		new_arr2[x] = curr
+		curr *= arr[x]
+
+	for x in range(len(arr)):
+		new_arr[x] = new_arr1[x] * new_arr2[x]
+
+	return new_arr
+
+# not mine (b)
+def arrayOfProducts(arr):
+	new_arr = [1 for x in range(len(arr))]
+
+	curr = 1
+	for x in range(len(arr)):
+		new_arr[x] = curr
+		curr *= arr[x]
+
+	curr = 1
+	for x in reversed(range(len(arr))):
+		new_arr[x] *= curr
+		curr *= arr[x]
+
+	return new_arr
