@@ -117,3 +117,55 @@ def func2(temp):
 	while temp.parent and temp.parent.right == temp:
 		temp = temp.parent
 	return temp.parent
+
+# 4 Binary Tree Diameter
+class BinaryTree:
+    def __init__(self, value, left=None, right=None):
+        self.value = value
+        self.left = left
+        self.right = right
+
+class Help:
+	def __init__(self, height, diameter):
+		self.height = height
+		self.diameter = diameter
+
+# mine
+def binaryTreeDiameter(tree):
+	def dfs(node):
+		if node is None:
+			return Help(0,0)
+
+		l = dfs(node.left)
+		r = dfs(node.right)
+
+		longest = l.height + r.height
+		curr_diameter = max(l.diameter, r.diameter)
+
+		diameter = max(longest, curr_diameter)
+		height = max(l.height, r.height) + 1
+
+		return Help(height, diameter)
+
+	return dfs(tree).diameter
+
+# not mine
+def binaryTreeDiameter(tree):
+	return dfs(tree).diameter
+
+def dfs(node):
+	if node is None:
+		return Help(0, 0)
+	
+	l = dfs(node.left)
+	r = dfs(node.right)
+	# after leaves
+	longest = l.height + r.height 
+	# (above) through the root
+	curr_diameter = max(l.diameter, r.diameter)
+	# (above) maximum diameter from one of the subtree
+	diameter = max(longest, curr_diameter)
+	# (above) new max diameter
+	height = max(l.height, r.height) + 1
+	
+	return Help(height, diameter)
