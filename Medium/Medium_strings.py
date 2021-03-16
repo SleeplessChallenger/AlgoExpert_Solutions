@@ -52,3 +52,61 @@ def func(arr):
 	if int_arr > 255:
 		return False
 	return len(str(int_arr)) == len(arr)
+
+# 4 Reverse words in string
+# a
+def reverseWordsInString(string):
+	temp = []
+	idx = 0
+	for x in range(len(string)):
+		if string[x] == ' ':
+		# if we have 2 spaces: the first
+		# one will be added by first loop
+		# the second one will be added 
+		# on the next iteration by the 
+		# second loop
+			temp.append(string[idx:x])
+			idx = x
+		# on the next iteratoion 
+		# after the space was found
+		# we check whether 'string' itself
+		# on the (x - 1) has space (and it 
+		# does have) => we append our list
+		# with the ' '
+		# if it doesn't have space => skip
+		elif string[idx] == ' ':
+			temp.append(' ')
+			idx = x
+
+	temp.append(string[idx:])
+
+	i, j = 0, len(temp) - 1
+	while i < j:
+		temp[i], temp[j] = temp[j], temp[i]
+		i += 1
+		j -= 1
+
+	return ''.join(temp)
+
+# b
+def reverseWordsInString(string):
+	arr = [x for x in string]
+	swap(arr, 0, len(arr) - 1)
+
+	start = 0
+	while start < len(string):
+		end = start
+		while end < len(string) and arr[end] != ' ':
+			end += 1
+
+		swap(arr, start, end - 1)
+		# (above) to bypass whitespace
+		start = end + 1
+		# (above) to bypass whitespace
+	return ''.join(arr)
+
+def swap(arr, st, end):
+	while st < end:
+		arr[st], arr[end] = arr[end], arr[st]
+		st += 1
+		end -= 1
