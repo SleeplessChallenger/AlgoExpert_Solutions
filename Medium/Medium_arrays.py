@@ -316,3 +316,28 @@ def arrayOfProducts(arr):
 		curr *= arr[x]
 
 	return new_arr
+
+# 8 First Duplicate Value
+# mine
+def firstDuplicateValue(arr):
+	ht = {}
+	for x in arr:
+		if x not in ht:
+			ht[x] = 0
+		ht[x] += 1
+		if ht[x] > 1:
+			return x
+	return -1
+
+# not mine
+# in descr it's said that integers in array
+# are between 1 and n inclusive, where 
+# n is the length of the array
+# => we can use trick with indicies
+def firstDuplicateValue(arr):
+	for x in arr:
+		absV = abs(x)
+		if arr[absV - 1] < 0:
+			return absV
+		arr[absV - 1] *= -1
+	return -1
