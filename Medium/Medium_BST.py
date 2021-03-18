@@ -200,3 +200,60 @@ def traverse(node, k, inst):
         inst.count += 1
         inst.prev = node.value
         traverse(node.left, k, inst)
+
+# 6 Reconstruct BST
+class BST:
+    def __init__(self, value, left=None, right=None):
+        self.value = value
+        self.left = left
+        self.right = right
+
+# first: T: O(n^2); S: O(n)
+def reconstructBst(arr):
+    if len(arr) == 0:
+        return None
+
+    curr = arr[0]
+    rightTree = len(arr)
+
+    # traverse till curr < 'some value' in array
+    # if so, change right border for the index
+    # of that 'some value'
+
+    for x in range(1, len(arr)):
+        if arr[x] >= curr:
+            rightTree = x
+            break
+
+    # from next after arr[0] on current step
+    leftNode = reconstructBst(arr[1:rightTree])
+    # if there is value > curr => 1) rightTree = len(arr) [suppose 4]
+    # if last in this arr > than curr => 2) rightTree = 3
+    rightNode = reconstructBst(arr[rightTree:])
+    return BST(curr, leftNode, rightNode)
+
+# second: T: O(n); S: O(n)
+class Help:
+    def __init__(self, idx):
+        self.idx = idx
+
+
+def reconstructBst(values):
+    inst = Help(0)
+    return func(values, inst, float('-inf'), float('+inf'))
+
+def func(arr, inst, lower, upper):
+    if inst.idx == len(arr):
+        return None
+    # if .idx == len(arr) -> done
+
+    # .idx means what value from arr 
+    # we'll take on the current recursive call
+    curr = arr[inst.idx]
+    if curr < lower or curr >= upper:
+        return None
+
+    inst.idx += 1
+    leftNode = func(arr, inst, lower, curr)
+    rightNode = func(arr, inst, curr, upper)
+    return BST(curr, leftNode, rightNode)
