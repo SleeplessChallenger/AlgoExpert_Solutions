@@ -51,4 +51,49 @@ def sunsetViews(b, d):
 	if d == 'EAST':
 		return result[::-1]
 	return result
+
+# 3 Min Max Stack Construction
+# mine
+class MinMaxStack:
+	def __init__(self):
+		self.stack = []
+		# due to O(1) S & T constraint
+		# we'll keep Min/Max values
+		self.MinMaxStack = []
+
+	def peek(self):
+		return self.stack[-1]
+
+	def pop(self):
+		self.MinMaxStack.pop()
+		return self.stack.pop()
+
+	def push(self, number):
+		self.stack.append(number)
+		if len(self.MinMaxStack) == 0:
+			self.MinMaxStack.append({'min': number, 'max': number})
+		else:
+			min = self.MinMaxStack[-1]['min'] if\
+				  self.MinMaxStack[-1]['min'] < number else number
+			max = self.MinMaxStack[-1]['max'] if\
+				  self.MinMaxStack[-1]['max'] > number else number
+			self.MinMaxStack.append({'min': min, 'max': max})
+
+	def getMin(self):
+		return self.MinMaxStack[-1]['min']
+
+	def getMax(self):
+		return self.MinMaxStack[-1]['max']
+
+# another way to make push()
+	
+	def push(self, number):
+		newMinMax = {'min': number, 'max': number}
+		if len(self.MinMaxStack):
+			lastMinMax = self.MinMaxStack[-1]
+			lastMinMax['min'] = min(lastMinMax['min'], number)
+			lastMinMax['max'] = max(lastMinMax['max'], number)
+		self.MinMaxStack.append(lastMinMax)
+		self.stack.append(number)
+
  
