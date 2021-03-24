@@ -156,3 +156,69 @@ def backTrack(higher, lower, idx):
         higher = higher.ancestor
         lower = lower.ancestor
     return higher
+
+# 5 Cycle in Graph
+# recursive with stack; T: O(v + e) S: O(v)
+def cycleInGraph(edges):
+    # has cycle -> True else False
+    explored = [False for x in range(len(edges))]
+    # for overall track
+    stack = [False for x inr ange(len(edges))]
+    # for currrent traversal track
+
+    len_graph = len(edges)
+    for edge in range(len_graph):
+        if not explored[edge]:
+            cycle = dfs(edges, edge, explored, stack)
+            if cycle:
+                return True
+    return False
+
+def dfs(edges, edge, explored, stack):
+    stack[edge] = True
+    explored[edge] = True
+
+    for x in edges[edge]:
+        if not explored[x]:
+            cycle = dfs(edges, x, explored, stack)
+            if cycle:
+                return True
+        elif stack[x]:
+            return True
+    stack[edge] = False
+    return False
+
+# recursive with colours; T: O(v + e) S: O(v)
+white, grey, black = 0, 1, 2
+# hence we can use them as variables
+# white -> unvisited
+# grey -> currently in stack
+# black -> visited
+def cycleInGraph(edges):
+    colours = [white for x in range(len(edges))]
+    len_edges = len(edges)
+
+    for edge in range(len_edges):
+        if colours[edge] != white:
+        # if colours[edge] == black:
+            continue
+        cycle = dfs(edge, edges, colours)
+        if cycle:
+            return True
+    return False
+
+def dfs(edge, edges, colours):
+    colours[edge] = grey
+
+    for x in edges[edge]:
+        if colours[x] == grey:
+            return True
+        elif colours[x] == black:
+            continue
+        elif colours[x] == white:
+            cycle = dfs(x, edges, colours)
+            if cycle:
+                return True
+
+    colours[edge] = False
+    return False
