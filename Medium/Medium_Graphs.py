@@ -222,3 +222,60 @@ def dfs(edge, edges, colours):
 
     colours[edge] = False
     return False
+
+# 6 Remove Islands
+# recursive
+def removeIslands(matrix):
+    explored = [[False for x in rows] for rows in matrix]
+
+    for row in range(len(matrix)):
+        for col in range(len(matrix[row])):
+            rowB = row == 0 or row == len(matrix) - 1
+            colB = col == 0 or col == len(matrix[row]) - 1
+            isBorder = rowB or colB
+            if not isBorder:
+                continue
+            if matrix[row][col] != 1:
+                continue
+            traverse(row, col, matrix, explored)
+
+    for row in range(1, len(matrix) - 1):
+        for col in range(1, len(matrix[row]) - 1):
+            if explored[row][col]:
+                continue
+            matrix[row][col] = 0
+    return matrix
+
+def traverse(idx1, idx2, matrix, explored):
+    stack = [(idx1, idx2)]
+    while len(stack) != 0:
+        curr_stack = stack.pop()
+        node1, node2 = curr_stack
+
+        if explored[node1][node2]:
+            continue
+        explored[node1][node2] = True
+
+        neigh = explore(node1, node2, matrix)
+        for edge in neigh:
+            row, col = edge
+            if matrix[row][col] != 1:
+                continue
+
+            stack.append(edge)
+
+def explore(i, j, matrix):
+    container = []
+
+    if i - 1 >= 0: # UP
+        container.append((i - 1, j))
+    if j - 1 >= 0: # LEFT
+        container.append((i, j - 1))
+    if i + 1 <= len(matrix) - 1: # DOWN
+        # or i + 1 <= len(matrix):
+        container.append((i + 1, j))
+    if j + 1 <= len(matrix[i]) - 1: # RIGHT
+        # or j + 1 <= len(matrix[i]):
+        container.append((i, j + 1))
+
+    return container
