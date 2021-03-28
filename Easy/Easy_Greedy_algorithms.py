@@ -1,4 +1,13 @@
 # 1 Minimum waiting time
+#mine
+def minimumWaitingTime(queries):
+	count = 0
+	queries.sort()
+	add = 0
+	for x in range(1, len(queries)):
+		count += queries[x - 1] + add
+		add += queries[x - 1]
+	return count
 # a
 def minimumWaitingTime(queries):
 	queries.sort()
