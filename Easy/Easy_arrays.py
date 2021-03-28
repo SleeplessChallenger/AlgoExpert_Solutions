@@ -42,7 +42,7 @@ def nonConstructibleChange(coins):
 # mine
 def tournamentWinner(competitions, results):
 	hashtable = dict()
-    for x in competitions:
+	for x in competitions:
 		hashtable[x[0]] = 0
 	for x in competitions:
 		hashtable[x[1]] = 0
@@ -56,10 +56,10 @@ def tournamentWinner(competitions, results):
 # not mine
 const = 1
 def tournamentWinner(competitions, results):
-    curr = ''
+	curr = ''
 	hash_ = {curr: 0}
 	for x, y in enumerate(competitions):
-		# or tweak for range(len(competitions))
+	# or tweak for range(len(competitions))
 		result = results[x]
 		home, away = y
 		winning = home if result == const else away
