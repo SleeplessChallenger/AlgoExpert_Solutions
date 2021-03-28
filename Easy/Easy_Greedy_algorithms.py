@@ -25,7 +25,19 @@ def minimumWaitingTime(queries):
 	return temp
 
 # 2 Class photos
-# mine
+#mine a
+def classPhotos(reds, blues):
+	reds.sort()
+	blues.sort()
+	colour = 'red' if reds[0] > blues[0] else 'blue'
+	
+	for x in range(len(reds)):
+		if colour == 'red' and reds[x] <= blues[x]:
+			return False
+		elif colour == 'blue' and reds[x] >= blues[x]:
+			return False
+	return True
+# mine b
 def classPhotos(reds, blues):
 	reds.sort(reverse=True)
 	blues.sort(reverse=True)
@@ -39,6 +51,8 @@ def classPhotos(reds, blues):
 			if reds[y] < blues[y]:
 				continue
 			return False
+	else:
+		return False
 	return True
 
 # not mine
@@ -54,5 +68,3 @@ def classPhotos(reds, blues):
 			if reds[x] <= blues[x]:
 				return False
 	return True
-
-
