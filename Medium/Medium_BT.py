@@ -60,7 +60,7 @@ class TreeInfo:
 
 def heightBalancedBinaryTree(tree):
 	temp = dfs(tree)
-	return tree.balanced
+	return temp.balanced
 
 def dfs(node):
 	if node is None:
