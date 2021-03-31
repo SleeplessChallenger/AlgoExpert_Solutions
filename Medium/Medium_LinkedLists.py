@@ -132,6 +132,10 @@ def removeKthNodeFromEnd(head, k):
     first = head
     second = head
     counter = 1
+    # with '1' and '<=' we can make one step further
+    # and if k = 4 land at fifth position so as in the
+    # final loop easily use .next.next property.
+    # inated of 1 it's possible: counter = 0 and while counter < k
     while counter <= k:
         counter += 1
         second = second.next
