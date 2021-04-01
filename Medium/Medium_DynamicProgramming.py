@@ -97,6 +97,9 @@ def levenshteinDistance(str1, str2):
 # not mine
 def levenshteinDistance(str1, str2):
 	arr = [[x for x in range(1, len(str1)+1)] for y in range(1, len(str2)+1)]
+	# after this step we populate overall 2D array according to str1
+	# and after following one we populate 2D array's first indices 
+	# according to str2
 	for x in range(1, len(str2)+1):
 		arr[x][0] = arr[x-1][0] + 1
 	for idx1 in range(1, len(str2)+1):
