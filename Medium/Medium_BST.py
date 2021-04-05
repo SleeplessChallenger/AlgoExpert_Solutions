@@ -117,6 +117,10 @@ class BST:
     	return False
 
     def remove(self, value, parent=None):
+	# cases to deal with
+	# 1. if both childs are in place
+	# 2. if no parent (find at first try) + only one child (when both above is dealth with)
+	# 3. if parent exists, but only 1 child
     	curr = self
     	while curr:
     		if curr.value > value:
