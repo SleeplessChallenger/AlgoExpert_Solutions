@@ -27,6 +27,21 @@ def isValidSubsequence(arr, seq):
 	return False
 
 # 3 Non-constructible change
+# mine
+def nonConstructibleChange(coins):
+    if len(coins) == 0:
+		return 1
+	coins.sort()
+	total = 0
+	
+	for x in coins:
+		if (x - total) > 1:
+			return total + 1
+		else:
+			total += x
+	return total + 1
+
+# not mine
 def nonConstructibleChange(coins):
     #for simplicity use inbuilt sort()
 	coins.sort()
