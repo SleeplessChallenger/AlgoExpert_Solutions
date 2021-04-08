@@ -105,3 +105,35 @@ def fucn(target, st):
 		if x == target:
 			count += 1
 	return count
+
+# 5 First Non-Repeating Character
+# mine
+def firstNonRepeatingCharacter(string):
+	ht = {}
+
+	for x in string:
+		if x not in ht:
+			ht[x] = 0
+		ht[x] += 1
+
+	for x, y in ht.items():
+		if y == 1:
+			return string.index(x)
+
+	return -1
+
+# not mine
+def firstNonRepeatingCharacter(string):
+	ht = {}
+
+	for x in string:
+		if x not in ht:
+			ht[x] = 0
+		ht[x] += 1
+
+	for idx in range(len(string)):
+		letter = string[idx]
+		if ht[letter] == 1:
+			return idx
+
+	return -1
