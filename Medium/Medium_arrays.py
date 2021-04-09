@@ -341,3 +341,24 @@ def firstDuplicateValue(arr):
 			return absV
 		arr[absV - 1] *= -1
 	return -1
+
+# 9 Merge Overlapping Intervals
+def mergeOverlappingIntervals(intervals):
+	if len(intervals) <= 1:
+		return intervals
+
+	intervals.sort(key=lambda x: x[0])
+
+	current = intervals[0]
+	result = [current]
+
+	for next_int in intervals:
+
+		if next_int[0] <= current[1]:
+			current[1] = max(next_int[1], current[1])
+
+		else:
+			result.append(next_int)
+			current = next_int
+
+	return result
