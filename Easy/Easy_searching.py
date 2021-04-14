@@ -1,4 +1,20 @@
 # 1 Binary search
+# 1
+def binarySearch(arr, target):
+	left = 0
+	right = len(arr) - 1
+	
+	while left <=right:
+		middle = (left + right) // 2
+		if arr[middle] > target:
+			right = middle - 1
+		elif arr[middle] < target:
+			left = middle + 1
+		else:
+			return middle
+	return -1
+
+# 2
 def binarySearch(arr, target):
 	left = 0
 	right = len(arr) - 1
