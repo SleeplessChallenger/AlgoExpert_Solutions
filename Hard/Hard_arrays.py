@@ -27,3 +27,34 @@ def helper(idx, figure, arr):
 	elif idx == len(arr) - 1:
 		return arr[idx - 1] > figure
 	return arr[idx - 1] > figure or arr[idx + 1] < figure
+
+# 2 Largest Range
+def largestRange(array):
+	ht = {}
+	longest = 0
+	result = []
+
+	for x in array:
+		ht[x] = True
+
+	for x in array:
+		if ht[x] is False:
+			continue
+		ht[x] = False
+		left = x - 1
+		right = x + 1
+		current = 1
+
+		while left in ht:
+			left = left - 1
+			current += 1
+
+		while right in ht:
+			right = right + 1
+			current += 1
+
+		if longest < current:
+			longest = current
+			result = [left + 1, right - 1]
+
+	return result
