@@ -1,6 +1,6 @@
 # 1 Shifted Binary Search
 def shiftedBinarySearch(array, target):
-	# : O(n) S: O(1)
+	# T: O(n) S: O(1)
 	if target in array:
 		return array.index(target)
 	return -1
