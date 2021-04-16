@@ -46,10 +46,12 @@ def largestRange(array):
 		current = 1
 
 		while left in ht:
+			ht[left] = False
 			left = left - 1
 			current += 1
 
 		while right in ht:
+			ht[right] = False
 			right = right + 1
 			current += 1
 
