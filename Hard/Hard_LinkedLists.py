@@ -48,3 +48,25 @@ def findLoop(head):
 		second = second.next
 
 	return first
+
+
+# 2 Reverse Linked LIst
+class LinkedList:
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
+
+def reverseLinkedList(head):
+	node = head
+	nx = None
+	pr = None
+
+	while node:
+		nx = node.next
+		node.next = pr
+		pr = node
+		node = nx
+
+	return pr
+
