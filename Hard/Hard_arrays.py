@@ -114,3 +114,31 @@ def minRewards(scores):
 			rewards[idx] = max(rewards[idx], rewards[idx+1]+1)
 
 	return sum(rewards)
+
+# 4 Four Number Sum
+def fourNumberSum(array, targetSum):
+    quadruplet = []
+	ht = {}
+	# add to ht sums of pairs
+	# which are behind our current number
+	for idx1 in range(1, len(array) - 1):
+		# (above) we used '1' as we don't do anything
+		# throughout first pass
+		# (below) for numbers that come after current (idx1)
+		for idx2 in range(idx1 + 1, len(array)):
+			curr_sum = array[idx1] + array[idx2]
+			diff = targetSum - curr_sum
+			if diff in ht: # => found quadruplet
+				for pair in ht[diff]:
+					quadruplet.append(pair + [array[idx1], array[idx2]])
+		# (below) for numbers that come before current (idx1)
+		for idx3 in range(0, idx1):
+			curr_sum = array[idx1] + array[idx3]
+			if curr_sum not in ht:
+				ht[curr_sum] = [[array[idx3], array[idx1]]]
+			else:
+				ht[curr_sum].append([array[idx3], array[idx1]])
+		# those 2 loops above are for not
+		# double counting quadruplets
+	return quadruplet
+
