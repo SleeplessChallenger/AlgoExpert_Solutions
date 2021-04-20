@@ -61,6 +61,21 @@ def largestRange(array):
 
 	return result
 
+# 3 Min Rewards
+# 1
+def minRewards(scores):
+	rewards = [1 for x in scores]
+
+	for idx in range(1, len(scores)):
+		idx2 = idx - 1
+		if scores[idx] > scores[idx2]:
+			rewards[idx] = rewards[idx2] + 1
+		else:
+			while idx2 >= 0 and scores[idx2] > scores[idx2+1]:
+				rewards[idx2] = max(rewards[idx2], rewards[idx2+1]+1)
+				idx2 -= 1
+	return sum(rewards)
+
 # 2
 def minRewards(scores):
 	rewards = [1 for x in scores]
