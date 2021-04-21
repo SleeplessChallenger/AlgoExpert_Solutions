@@ -157,3 +157,40 @@ def fourNumberSum(array, targetSum):
 		# double counting quadruplets
 	return quadruplet
 
+# 4 Zigzag traverse
+def zigzagTraverse(arr):
+    result = []
+	col = 0
+	row = 0
+	height = len(arr) - 1
+	width = len(arr[0]) - 1
+	Check = True
+	
+	while not CheckBorders(row, col, height, width):
+		result.append(arr[row][col])
+		
+		if Check:
+			if col == 0 or row == height:
+				Check = False
+				if row == height:
+					col += 1
+				elif col == 0:
+					row += 1
+			else:
+				row += 1
+				col -= 1
+		
+		elif not Check:
+			if row == 0 or col == width:
+				Check = True
+				if col == width:
+					row += 1
+				elif row == 0:
+					col += 1
+			else:
+				row -= 1
+				col += 1
+	return result
+
+def CheckBorders(row, col, height, width):
+	return row < 0 or col < 0 or row > height or col > width
