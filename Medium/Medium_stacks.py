@@ -96,4 +96,24 @@ class MinMaxStack:
 		self.MinMaxStack.append(lastMinMax)
 		self.stack.append(number)
 
- 
+# 4 Sort Stack
+def sortStack(stack):
+	if len(stack) == 0:
+		return stack
+
+	temp = stack.pop()
+
+	sortStack(stack)
+	helper(stack, temp)
+
+	return stack
+
+def helper(stack, value):
+	if len(stack) == 0 or stack[-1] <= value:
+		stack.append(value)
+		return
+
+	temp = stack.pop()
+	helper(stack, value)
+
+	stack.append(temp)
