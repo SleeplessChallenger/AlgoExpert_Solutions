@@ -97,3 +97,68 @@ def mergeLinkedLists(headOne, headTwo):
 		prev.next = p2
 
 	return headOne if headOne.value < headTwo.value else
+
+# 4 Shift Linked List
+# mine
+
+class LinkedList:
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
+# 4 variables required: old head/old tail/new head/new tail
+# old tail -> old head; newHead -> newTail.next; newTail.next -> None
+# newTail.next is newHead => getting newTail will grant us newHead 'for free'
+# newTail is located 'k positions away' from old tail when k > 0
+# whilst when k < 0 => abs(k) from old head
+def shiftLinkedList(head, k):
+	i = 0
+	tail = head
+	while tail.next:
+		tail = tail.next
+		i += 1
+	i += 1 # to have the real length
+	
+	offset = abs(k) % i
+	# a) if k == 0 b) if k % i == 0 (30 % 6)
+	if offset == 0:
+		return head
+	# in Python modulo will return positive integer
+	newTailPos = i - offset if k > 0 else offset
+	newTail = head
+	count = 1
+	# Ex: newTailPos = 4 => we need exactly 4th position
+	# hence starting from 0 will move us one ahead
+	while count != newTailPos:
+		newTail = newTail.next
+		count += 1
+	
+	newHead = newTail.next
+	tail.next = head
+	newTail.next = None
+	
+	return newHead
+
+# not mine
+def shiftLinkedList(head, k):
+    tail = head
+	length = 1
+	while tail.next:
+		tail = tail.next
+		length += 1
+	
+	offset = abs(k) % length
+	if offset == 0:
+		return head
+	
+	newTailPos = length - offset if k > 0 else offset
+	newTail = head
+	
+	for i in range(1, newTailPos):
+		newTail = newTail.next
+	
+	newHead = newTail.next
+	newTail.next = None
+	tail.next = head
+	
+	return newHead
