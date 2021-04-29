@@ -71,5 +71,5 @@ class MinHeap:
     	node = self.heap.pop()
     	if len(self.heap) > 0:
     		self.heap[0] = node
-    		self.siftUp()
+    		self.siftDown()
     	return remove_value
