@@ -1,4 +1,67 @@
 # 1 Boggle Board
+# mine
+class Trie:
+	def __init__(self):
+		self.root = {}
+		self.endSymbol = '*'
+	
+	def add(self, word):
+		node = self.root
+		for letter in word:
+			if letter not in node:
+				node[letter] = {}
+			node = node[letter]
+		node[self.endSymbol] = word
+
+
+def boggleBoard(board, words):
+    trie = Trie()
+	for word in words:
+		trie.add(word)
+	explored = [[False for x in y] for y in board]
+	result = []
+	for x in range(len(board)):
+		for y in range(len(board[x])):
+			explore(x, y, board, result, explored, trie.root)
+	return result
+
+def explore(i, j, board, result, explored, node):
+	if explored[i][j]:
+		return
+	letter = board[i][j]
+	if letter not in node:
+		return
+	node = node[letter]
+	explored[i][j] = True
+	if '*' in node:
+		if not node['*'] in result:
+			result.append(node['*'])
+	others = helper(i, j, board)
+	for obj in others:
+		explore(obj[0], obj[1], board, result, explored, node)
+	explored[i][j] = False
+
+def helper(i, j, board):
+	cont = []
+	if i > 0 and j > 0:
+		cont.append([i - 1, j - 1])
+	if i > 0 and j < len(board[0]) - 1:
+		cont.append([i - 1, j + 1])
+	if i < len(board) - 1 and j < len(board[0]) - 1:
+		cont.append([i + 1, j + 1])
+	if i < len(board) - 1 and j > 0:
+		cont.append([i + 1, j - 1])
+	if i > 0:
+		cont.append([i - 1, j])
+	if i < len(board) - 1:
+		cont.append([i + 1, j])
+	if j > 0:
+		cont.append([i, j - 1])
+	if j < len(board[0]) - 1:
+		cont.append([i, j + 1])
+	return cont
+
+# not mine
 class Trie:
 	def __init__(self):
 		self.root = {}
