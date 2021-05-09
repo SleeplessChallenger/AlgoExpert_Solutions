@@ -71,6 +71,21 @@ def numberOfWaysToTraverseGraph(w, h, memo={}):
 	
 	return memo[key]
 
+# mine 3
+def numberOfWaysToTraverseGraph(w, h):
+    arr = [[0 for x in range(w)] for y in range(h)]
+
+	for up in range(w):
+		for down in range(h):
+			if up == 0 or down == 0:
+				arr[down][up] = 1
+			else:
+				w_fig = arr[down][up-1]
+				h_fig = arr[down-1][up]
+				arr[down][up] = (w_fig + h_fig)
+
+	return arr[h-1][w-1]
+
 # a
 def numberofWays(w, h):
 	if w == 1 or h == 1:
