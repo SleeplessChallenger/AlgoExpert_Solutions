@@ -47,7 +47,7 @@ def minNumberOfCoinsForChange(n, denoms):
 	return arr[n] if arr[n] != float('inf') else -1
 
 # 4 Number of ways to traverse graph
-# mine
+# mine 1
 def func(width, height, memo={}):
 	key = f'{width},{height}'
 	if key in memo:
@@ -57,6 +57,18 @@ def func(width, height, memo={}):
 	if width == 0 or height == 0:
 		return 0
 	memo[key] = func(width - 1, height, memo) + func(width, height - 1, memo)
+	return memo[key]
+
+# mine 2
+def numberOfWaysToTraverseGraph(w, h, memo={}):
+    key = f"{w},{h}"
+	if key in memo:
+		return memo[key]
+	if w == 1 or h == 1:
+		return 1
+	memo[key] = numberOfWaysToTraverseGraph(w-1, h, memo) +\
+				numberOfWaysToTraverseGraph(w, h-1, memo)
+	
 	return memo[key]
 
 # a
