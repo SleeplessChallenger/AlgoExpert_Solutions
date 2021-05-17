@@ -85,3 +85,77 @@ def helper(arr, items):
 		if col == 0:
 			break
 	return list(reversed(result))
+
+# 3 Max Sum Increasing Subsequence
+def maxSumIncreasingSubsequence(arr):
+    sums = [x for x in arr]
+	ref = [None for x in arr]
+	
+	sums[0] = arr[0]
+	maxIdx = 0
+	
+	for i in range(1, len(arr)):
+		curr = arr[i]
+		for j in range(0, i):
+			prev = arr[j]
+			if prev < curr and sums[i] < sums[j] + curr:
+				# second part of `if statement` is
+				# vital as without it unnecessary
+				# indicies would be added to ref
+				sums[i] = (sums[j] + curr)
+				ref[i] = j
+	
+		if sums[maxIdx] < sums[i]:
+			maxIdx = i
+	
+	return [sums[maxIdx], backTrack(ref, maxIdx, arr)]
+
+def backTrack(ref, idx, arr):
+	result = []
+	
+	while idx is not None:
+		result.append(arr[idx])
+		idx = ref[idx]
+	
+	return list(reversed(result))
+
+# 4 Min Number of Jumps
+
+# T: O(n^2) S: O(n)
+def minNumberOfJumps(array):	
+	jumps = [float('inf') for _ in array]
+	jumps[0] = 0
+	
+	for i in range(1, len(array)):
+		for j in range(0, i):
+			if array[j] + j >= i:
+				# we take value(number of jumps) itself
+				# and add the `range` within
+				# which it can spread
+				jumps[i] = min(jumps[i], jumps[j] + 1)
+				# `+1` because we know from previous
+				# that we're able to reach `i`, hence
+				# we're to make jump from [j]. And this
+				# jump will be represented by `+1`
+	return jumps[-1]
+
+# T: O(n) S: O(1)
+def minNumberOfJumps(arr):
+	if len(arr) == 1:
+		return 0
+	
+    max_reach = arr[0]
+	jumps = 0
+	steps = arr[0]
+	
+	for i in range(1, len(arr) - 1):
+		# `-1` because when we're at a final
+		# index, we don't need to use it
+		max_reach = max(max_reach, arr[i] + i)
+		steps -= 1
+		if steps == 0:
+			jumps += 1
+			steps = max_reach - i
+	# as we don't iterate till last index
+	# we need one more jump to reach final
+	return jumps + 1
