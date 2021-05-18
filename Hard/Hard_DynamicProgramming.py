@@ -159,3 +159,93 @@ def minNumberOfJumps(arr):
 	# as we don't iterate till last index
 	# we need one more jump to reach final
 	return jumps + 1
+
+# 5 Water Area
+# mine
+def waterArea(heights):
+	if len(heights) < 3 or sum(heights) < 2:
+		return 0
+	
+    nestedHeight = []
+	result = []
+	
+	for x in range(len(heights)):
+		helper(x, heights, nestedHeight)
+		small = min(nestedHeight[x])
+		result.append(small - heights[x])
+
+	return sum([x for x in result if x > 0])
+	
+	
+def helper(idx, heights, nestedHeight):
+	l_idx = idx - 1
+	r_idx = idx + 1
+	
+	left = float('-inf') if l_idx >= 0 else 0
+	right = float('-inf') if r_idx <= len(heights) - 1 else 0
+	
+	while l_idx >= 0:
+		left = max(heights[l_idx], left)
+		l_idx -= 1
+	
+	while r_idx <= len(heights) - 1:
+		right = max(heights[r_idx], right)
+		r_idx += 1
+	
+	nestedHeight.append([left, right])
+	return
+
+# not mine
+def waterArea(heights):
+    result = [0 for x in heights]
+	leftMax = 0
+	
+	for x in range(len(heights)):
+		h = heights[x]
+		result[x] = leftMax
+		leftMax = max(leftMax, h)
+	print(result)
+	rightMax = 0
+	for x in reversed(range(len(heights))):
+		h = heights[x]
+		minHeight = min(rightMax, result[x])
+		# (above) we choose min(left, right)
+		if h < minHeight:
+			# find distance to the tallest pillar
+			result[x] = minHeight - h
+		else:
+			result[x] = 0
+		rightMax = max(rightMax, h)
+	
+	return sum(result)
+
+
+# 6 Disk Stacking
+def diskStacking(disks):
+	disks.sort(key=lambda x: x[2])
+	
+	sums = [disks[x][2] for x in range(len(disks))]
+	ref = [None for x in disks]
+	
+	for i in range(len(disks)):
+		curr = disks[i]
+		for j in range(0, i):
+			prev = disks[j]
+			if curr[0] > prev[0] and curr[1] > prev[1] and curr[2] > prev[2]:
+				if sums[i] < sums[j] + curr[2]:
+					sums[i] = (curr[2] + sums[j])
+					ref[i] = j
+	
+	value = max(sums)
+	idx = sums.index(value)
+	
+	return backTrack(idx, ref, disks)
+
+def backTrack(idx, ref, disks):
+	result = []
+	
+	while idx is not None:
+		result.append(disks[idx])
+		idx = ref[idx]
+	
+	return list(reversed(result))
