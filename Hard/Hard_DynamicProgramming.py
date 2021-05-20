@@ -249,3 +249,26 @@ def backTrack(idx, ref, disks):
 		idx = ref[idx]
 	
 	return list(reversed(result))
+
+# 7 Numbers in PI
+def numbersInPi(pi, numbers):
+	ht = {x: True for x in numbers}
+	result = helper(pi, ht, {}, 0)
+	return result if result != float('inf') else -1
+
+def helper(pi, ht, cache, idx):
+	if idx == len(pi):
+		return -1
+	
+	if idx in cache:
+		return cache[idx]
+	
+	fig = float('inf')
+	for i in range(idx, len(pi)):
+		chunk = pi[idx:i + 1]
+		if chunk in ht:
+			temp = helper(pi, ht, cache, i + 1)
+			fig = min(fig, temp + 1)
+	
+	cache[idx] = fig
+	return cache[idx]
