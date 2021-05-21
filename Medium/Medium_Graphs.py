@@ -279,3 +279,119 @@ def explore(i, j, matrix):
         container.append((i, j + 1))
 
     return container
+
+# 7 Minimum Passses of Matrix
+# mine
+def minimumPassesOfMatrix(matrix):
+    if len(matrix[0]) == 0:
+        return 0
+    elif len(matrix) == 1:
+        return 0 if matrix[0][0] >= 0 else -1
+    
+    idx = 0
+    arr = [[True if x > 0 else False for x in y] for y in matrix]
+    
+    while True:
+        if main(matrix, arr) is True:
+            idx += 1
+        else:
+            break
+    
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            if matrix[i][j] < 0:
+                return -1
+    return idx
+
+def main(matrix, arr):
+    count = 0
+    temp = []
+    
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            if matrix[i][j] < 0:
+                if helper(arr, i, j):
+                    matrix[i][j] *= -1
+                    temp.append([i, j])
+                    count += 1
+                else:
+                    continue
+            else:
+                continue
+    flip(temp, arr)
+    
+    return True if count != 0 else False
+
+def helper(arr, i, j):
+    if i > 0 and arr[i - 1][j] is True:
+        return True
+    if j > 0 and arr[i][j - 1] is True:
+        return True
+    if j < len(arr[0]) - 1 and arr[i][j + 1] is True:
+        return True
+    if i < len(arr) - 1 and arr[i + 1][j] is True:
+        return True
+    return False
+    
+def flip(temp, arr):
+    while len(temp) != 0:
+        nodes = temp.pop()
+        a, b = nodes[0], nodes[1]
+        arr[a][b] = True
+
+# not mine
+def minimumPassesOfMatrix(matrix):
+    positive_idx = getPositive(matrix)
+    count = main(positive_idx, matrix)
+    return count - 1 if noNegative(matrix) else -1
+
+    
+def main(pos, matrix):
+    count = 0
+    
+    while len(pos) != 0:
+        new = pos
+        pos = []
+        
+        while len(new) != 0:
+            row, col = new.pop(0)
+            
+            adjacent = getAdjacent(row, col, matrix)
+            
+            for ele in adjacent:
+                r, c = ele
+                
+                if matrix[r][c] < 0:
+                    matrix[r][c] *= -1
+                    pos.append([r, c])
+        count += 1
+    return count
+                    
+def getPositive(matrix):
+    result = []
+    
+    for x in range(len(matrix)):
+        for y in range(len(matrix[x])):
+            if matrix[x][y] > 0:
+                result.append([x, y])
+    return result
+
+def noNegative(matrix):
+    for x in range(len(matrix)):
+        for y in range(len(matrix[x])):
+            if matrix[x][y] < 0:
+                return False
+    return True
+
+def getAdjacent(i, j, matrix):
+    temp = []
+    
+    if i > 0:
+        temp.append([i - 1, j])
+    if j > 0:
+        temp.append([i, j - 1])
+    if i < len(matrix) - 1:
+        temp.append([i + 1, j])
+    if j < len(matrix[i]) - 1:
+        temp.append([i, j + 1])
+    return temp
