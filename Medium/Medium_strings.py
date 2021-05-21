@@ -110,3 +110,40 @@ def swap(arr, st, end):
 		arr[st], arr[end] = arr[end], arr[st]
 		st += 1
 		end -= 1
+
+# 5 Minimum Characters for words
+# mine
+def minimumCharactersForWords(words):
+    ht = {}
+	
+	for word in words:
+		new = {}
+		for let in word:
+			if let not in new:
+				new[let] = 0
+			new[let] += 1
+		
+		for x, y in new.items():
+			if x not in ht:
+				ht[x] = y
+			else:
+				ht[x] = max(ht[x], y)
+	
+	result = []
+	
+	# below you can opt between 2 ways
+	
+	# a
+	for x in ht:
+		while ht[x] != 0:
+			result.append(x)
+			ht[x] -= 1
+	
+	# b
+	for x in ht:
+		freq = ht[x]
+		
+		for _ in range(freq):
+			result.append(x)
+	
+	return result
