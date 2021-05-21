@@ -117,3 +117,60 @@ def helper(stack, value):
 	helper(stack, value)
 
 	stack.append(temp)
+
+# 5 Next Greater Element
+# mine
+def nextGreaterElement(arr):
+    new = [-1 for _ in range(len(arr))]
+
+	idx = 0
+	while idx != len(arr):
+		curr = arr[idx]
+		for i in range(idx + 1, len(arr) + idx):
+			i = i % len(arr)
+			if arr[i] > curr:
+				new[idx] = arr[i]
+				break
+		idx += 1
+	
+	return new
+
+# not mine `a`
+def nextGreaterElement(arr):
+	# in this solution we
+	# add indicies on the
+	# top of the stack
+    res = [-1 for _ in range(len(arr))]
+	stack = []
+	
+	for idx in range(2 * len(res)):
+		idx = idx % len(res)
+		
+		while len(stack) != 0 and arr[stack[-1]] < arr[idx]:
+			node = stack.pop()
+			res[node] = arr[idx]
+			
+		stack.append(idx)
+		
+	return res
+
+# not mine `b`
+def nextGreaterElement(arr):
+	# in this solution we
+	# add values on the
+	# top of the stack
+	new = [-1 for _ in range(len(arr))]
+	stack = []
+	
+	for i in range(2 * len(arr) - 1, -1, -1):
+		i = i % len(new)
+		
+		while len(stack) != 0:
+			if stack[-1] > arr[i]:
+				new[i] = stack[-1]
+				break
+			else:
+				stack.pop()
+		stack.append(arr[i])
+
+	return new
