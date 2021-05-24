@@ -84,3 +84,39 @@ def siftDown(idx, length, heap):
 
 def swap_func(i, j, heap):
 	heap[i], heap[j] = heap[j], heap[i]
+
+# 3 Radix Sort
+def radixSort(arr):
+	if len(arr) == 0:
+		return arr
+
+	digit = 0
+	maxFigure = max(arr)
+
+	while maxFigure / (10 ** digit) > 0:
+		countSort(arr, digit)
+		digit += 1
+
+	return arr
+
+def countSort(arr, digit):
+	counts = [0 for _ in range(10)]
+	sortedArr = [0 for _ in range(len(arr))]
+
+	digitColumn = 10 ** digit
+
+	for num in arr:
+		countIdx = (num // digitColumn) % 10
+		counts[countIdx] += 1
+
+	for idx in range(1, 10):
+		counts[idx] += counts[idx - 1]
+
+	for idx in range(len(arr) - 1, -1, -1):
+		countIdx = (arr[idx] // digitColumn) % 10
+		counts[countIdx] -= 1
+		sortedIdx = counts[countIdx]
+		sortedArr[sortedIdx] = arr[idx]
+
+	for idx in range(len(arr)):
+		arr[idx] = sortedArr[idx]
