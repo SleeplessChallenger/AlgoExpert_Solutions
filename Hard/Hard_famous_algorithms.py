@@ -228,3 +228,52 @@ class JobNode:
 #    noPre and from there to final array
 # * if there is Cycle: noPre is blank, but there are still
 #   vertices to explore => Cycle and invalid graph
+
+
+# 2 Dijkstra's Algorithm
+# T: O(v^2 + e) S: O(v)
+def dijkstrasAlgorithm(start, edges):
+    visited = set()
+	numEdges = len(edges)
+	minDist = [float('inf') for _ in range(numEdges)]
+	minDist[start] = 0
+	
+	while len(visited) != numEdges:
+		vertex, currMinDist = getVertexMinDist(minDist, visited)
+
+		if currMinDist == float('inf'):
+			break
+		
+		visited.add(vertex)
+		
+		for edge in edges[vertex]:
+			destination, distance = edge
+			
+			if destination in visited:
+				continue
+			
+			newPathLength = distance + currMinDist
+			currPathLength = minDist[destination]
+			
+			if newPathLength < currPathLength:
+				minDist[destination] = newPathLength
+		
+	return list(map(lambda x: x if x != float('inf') else -1, minDist))
+	
+def getVertexMinDist(minDist, visited):
+	currMinDist = float('inf')
+	vertexResult = -1
+
+	
+	for idx in range(len(minDist)):
+		vertex = idx
+		dist = minDist[idx]
+
+		if vertex in visited:
+			continue
+		
+		if dist <= currMinDist:
+			vertexResult = vertex
+			currMinDist = dist
+	
+	return vertexResult, currMinDist
