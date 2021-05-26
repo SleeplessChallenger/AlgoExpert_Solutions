@@ -84,3 +84,53 @@ def helper(i, j, k, one, two, three, memo):
 		# b) we came back from all recursive calls
 	memo[i][j] = False
 	return False
+
+# 3 Solve Sudoku
+def solveSudoku(board):
+	solvePart(0, 0, board)
+	return board
+
+def solvePart(row, col, board):
+	if col == len(board[row]):
+		col = 0
+		row += 1
+		if row == len(board):
+			return True
+
+	if board[row][col] == 0:
+		return tryAtIndex(row, col, board)
+
+	return solvePart(row, col + 1, board)
+
+def tryAtIndex(row, col, board):
+	for i in range(1, 10):
+		if isValid(i, row, col, board):
+			board[row][col] = i
+			if solvePart(row, col + 1, board):
+				return True
+
+	board[row][col] = 0
+	return False
+
+def isValid(i, row, col, board):
+	rowValid = i not in board[row]
+	colValid = i not in map(lambda x: x[col], board)
+
+	if not rowValid or not colValid:
+		return False
+
+	# 1 // 3 -> 0
+	# 5 // 3 -> 1
+	# 7 // 3 -> 2
+	rowGrid = row // 3
+	colGrid = col // 3
+
+	for r in range(3):
+		for c in range(3):
+			rowCheck = rowGrid * 3 + r
+			colCheck = colGrid * 3 + c
+			existValue = board[rowCheck][colCheck]
+			
+			if i == existValue:
+				return False
+	return True
