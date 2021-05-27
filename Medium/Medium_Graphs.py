@@ -284,6 +284,7 @@ def explore(i, j, matrix):
 # mine
 def minimumPassesOfMatrix(matrix):
     if len(matrix[0]) == 0:
+    # `len(matrix) == 0` is also OK
         return 0
     elif len(matrix) == 1:
         return 0 if matrix[0][0] >= 0 else -1
@@ -296,6 +297,10 @@ def minimumPassesOfMatrix(matrix):
             idx += 1
         else:
             break
+	# because eventually, even if we have
+	# changed all to positive, there'll be
+	# moment that no changes are made (everything)
+	# is positive already => -1 will be an error
     
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
