@@ -134,3 +134,20 @@ def isValid(i, row, col, board):
 			if i == existValue:
 				return False
 	return True
+
+# 4 Generate Div Tags
+def generateDivTags(numberOfTags):
+	op = numberOfTags
+	cl = numberOfTags
+	result = []
+	helper(op, cl, result, "")
+	return result
+
+def helper(op, cl, result, string):
+	if op > 0:
+		helper(op - 1, cl, result, string + '<div>')
+	if op < cl:
+		helper(op, cl - 1, result, string + '</div>')
+
+	if cl == 0:
+		result.append(string)
