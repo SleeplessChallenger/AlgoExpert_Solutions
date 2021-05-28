@@ -272,3 +272,94 @@ def helper(pi, ht, cache, idx):
 	
 	cache[idx] = fig
 	return cache[idx]
+
+# 8 Maximum Sum Submatrix
+# mine
+def maximumSumSubmatrix(matrix, size):
+	arr = [[0 for x in y] for y in matrix]
+	
+	# put value at very first idx
+	arr[0][0] = matrix[0][0]
+	
+	# put values at first row
+	for i in range(1, len(matrix[0])):
+		arr[0][i] = (arr[0][i - 1] + matrix[0][i])
+	
+	# put values at first column
+	for j in range(1, len(matrix)):
+		arr[j][0] = (arr[j - 1][0] + matrix[j][0])
+	
+	# populate new array with values
+	for i in range(1, len(arr)):
+		for j in range(1, len(arr[i])):
+			temp = arr[i][j - 1] + arr[i - 1][j] + \
+				   matrix[i][j] - arr[i - 1][j - 1]
+			arr[i][j] = temp
+	
+	maxSum = float('-inf')
+	
+	# do all the calculations
+	for i in range(size - 1, len(arr)):
+		for j in range(size - 1, len(arr[i])):
+			top = i - size < 0
+			left = j - size < 0
+			
+			if top and left:
+				maxSum = max(maxSum, arr[i][j])
+			elif top and not left:
+				maxSum = max(maxSum, arr[i][j] - arr[i][j - size])
+			elif not top and left:
+				maxSum = max(maxSum, arr[i][j] - arr[i - size][j])
+			# else:
+			elif not top and not left:
+				maxSum = max(maxSum, arr[i][j] + arr[i - size][j - size] -
+									 arr[i - size][j] - arr[i][j - size])
+	
+	return maxSum
+
+# not mine
+def maximumSumSubmatrix(matrix, size):
+    arr = createArray(matrix)
+	return calculations(matrix, arr, size)
+
+def calculations(matrix, arr, size):
+	maxSum = float('-inf')
+	
+	for i in range(size - 1, len(matrix)):
+		for j in range(size - 1, len(matrix[i])):
+			total = arr[i][j]
+			
+			top = i - size < 0
+			if not top:
+				total -= arr[i - size][j]
+			
+			left = j - size < 0
+			if not left:
+				total -= arr[i][j - size]
+			
+			bothTouch = top or left
+			
+			# means we didn't touch upper and left borders
+			if not bothTouch:
+				total += arr[i - size][j - size]
+			
+			maxSum = max(maxSum, total)
+	
+	return maxSum	
+	
+def createArray(matrix):
+	arr = [[0 for _ in loop] for loop in matrix]
+	
+	arr[0][0] = matrix[0][0]
+	
+	for i in range(1, len(matrix[0])):
+		arr[0][i] = (arr[0][i - 1] + matrix[0][i])
+	
+	for j in range(1, len(matrix)):
+		arr[j][0] = (arr[j - 1][0] + matrix[j][0])
+	
+	for i in range(1, len(arr)):
+		for j in range(1, len(arr[i])):
+			arr[i][j] = (arr[i - 1][j] + arr[i][j - 1] + matrix[i][j] - arr[i - 1][j - 1])
+	
+	return arr
