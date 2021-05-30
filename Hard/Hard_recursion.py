@@ -151,3 +151,37 @@ def helper(op, cl, result, string):
 
 	if cl == 0:
 		result.append(string)
+
+# 5 Ambiguous Measurements
+def ambiguousMeasurements(measuringCups, low, high):
+    return helper(measuringCups, low, high, {})
+
+def helper(cups, low, high, cache):
+	key = f"{low}, {high}"
+	if key in cache:
+		return cache[key]
+	
+	# `and` because low can be 0 initially
+	if low <= 0 and high <= 0:
+		return False
+	
+	temp = False
+	for obj in cups:
+		cupsLow, cupsHigh = obj
+		
+		if cupsLow >= low and cupsHigh <= high:
+			temp = True
+			break
+		
+		# new_low & new_high because we can't
+		# overwrite low & high as they're used
+		# in further iterations
+		new_low = max(0, low - cupsLow)
+		new_high = max(0, high - cupsHigh)
+		temp = helper(cups, new_low, new_high, cache)
+		
+		if temp:
+			break
+	
+	cache[key] = temp
+	return cache[key]
