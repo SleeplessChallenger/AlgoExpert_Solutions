@@ -118,3 +118,80 @@ def minHeap(a, b):
 
 def maxHeap(a, b):
 	return a > b
+
+# 2 Sort K-Sorted Array
+def sortKSortedArray(array, k):
+	heap = MinHeap(array[: min(k + 1, len(array))])
+	
+	sortedIdx = 0
+	for idx in range(k + 1, len(array)):
+		node = heap.remove()
+		array[sortedIdx] = node
+		sortedIdx += 1
+		nextNode = array[idx]
+		heap.insert(nextNode)
+	
+	while not heap.check():
+		node = heap.remove()
+		array[sortedIdx] = node
+		sortedIdx += 1
+	
+	return array
+
+
+class MinHeap:
+	def __init__(self, arr):
+		self.heap = self.buildHeap(arr)
+	
+	def check(self):
+		return len(self.heap) == 0
+	
+	def buildHeap(self, arr):
+		parentIdx = (len(arr) - 2) // 2
+		for i in reversed(range(parentIdx + 1)):
+			self.siftDown(i, len(arr) - 1, arr)
+		return arr
+	
+	def peek(self):
+		return self.heap[0]
+	
+	def remove(self):
+		to_remove = self.heap[0]
+		node = self.heap.pop()
+		if len(self.heap) > 0:
+			self.heap[0] = node
+			self.siftDown(0, len(self.heap) - 1, self.heap)
+		return to_remove
+	
+	def insert(self, value):
+		self.heap.append(value)
+		self.siftUp()
+	
+	def siftDown(self, idx, length, arr):
+		idxOne = idx * 2 + 1
+		while idxOne <= length:
+			idxTwo = idx * 2 + 2 if idx * 2 + 2 <= length else -1
+			if idxTwo != -1 and arr[idxOne] > arr[idxTwo]:
+				swap = idxTwo
+			else:
+				swap = idxOne
+			
+			if arr[swap] < arr[idx]:
+				self.swapValues(swap, idx, arr)
+				idx = swap
+				idxOne = idx * 2 + 1
+			else:
+				return
+	
+	def swapValues(self, i, j, arr):
+		arr[i], arr[j] = arr[j], arr[i]
+	
+	def siftUp(self):
+		idx = len(self.heap) - 1
+		while idx > 0:
+			parentIdx = (idx - 1) // 2
+			if self.heap[idx] < self.heap[parentIdx]:
+				self.swapValues(idx, parentIdx, self.heap)
+				idx = parentIdx
+			else:
+				return
