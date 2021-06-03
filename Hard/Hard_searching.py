@@ -155,3 +155,52 @@ def sort(arr, start, end, idx):
 
 def swap(arr, i, j):
 	arr[i], arr[j] = arr[j], arr[i]
+
+# 4 Index Equals Values
+# T: O(n) S: O(1)
+def indexEqualsValue(array):
+    # brute-force
+	for x in range(len(array)):
+		value = array[x]
+		if value == x:
+			return x
+	return -1
+
+# T: O(log n) S: O(1)
+def indexEqualsValue(arr):
+	left = 0
+	right = len(arr) - 1
+	# no duplicates in array & array is sorted!
+	while left <= right:
+		middle = (left + right) // 2
+		target = arr[middle]
+		
+		if middle == 0 and middle == target:
+			return middle
+		
+		elif middle == target and arr[middle - 1]  < middle - 1:
+			return middle
+		# if middle != 0 and if middle == target,
+		# then check element to the left. if that
+		# element < index -> return element from above
+		# Why make only that check? Because idx cannot be
+		# greater than value as array is sorted and have no
+		# duplicates (and take into account that current value
+		# == current idx and make one step to the left)
+		# if arr[middle - 1] == middle - 1, then eliminate
+		# right half of the algorithm. That's why we have
+		# `else` statement
+	
+		elif middle > target:
+			# all to the left can't match
+			# as we're in sorted array
+			left = middle + 1
+		
+		# we'll place `else` instead of `elif`. See
+		# above big explanation for the reason
+		else:
+			# all to the right can't match
+			# as we're in sorted array
+			right = middle - 1
+			
+	return -1
