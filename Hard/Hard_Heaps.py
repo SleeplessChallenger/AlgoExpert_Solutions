@@ -195,3 +195,104 @@ class MinHeap:
 				idx = parentIdx
 			else:
 				return
+
+# 3 Laptop Rentals
+# using heaps
+def laptopRentals(times):
+	if len(times) == 0:
+		return 0
+	
+    sortedTimes = times
+	sortedTimes.sort(key=lambda x: x[0])
+
+	heap = MinHeap([sortedTimes[0]])
+	count = 1
+	
+	for idx in range(1, len(sortedTimes)):
+		if heap.peek()[1] <= sortedTimes[idx][0]:
+			heap.remove()
+			heap.insert(sortedTimes[idx])
+		else:
+			count += 1
+			heap.insert(sortedTimes[idx])
+	
+	return count
+
+
+class MinHeap:
+	def __init__(self, arr):
+		self.heap = self.buildHeap(arr)
+	
+	def buildHeap(self, heap):
+		parentIdx = (len(heap) - 2) // 2
+		for i in reversed(range(parentIdx + 1)):
+			self.siftDown(i, len(heap) - 1, heap)
+		return heap
+	
+	def peek(self):
+		return self.heap[0]
+	
+	def remove(self):
+		drop = self.heap[0]
+		node = self.heap.pop()
+		if len(self.heap) > 0:
+			self.heap[0] = node
+			self.siftDown(0, len(self.heap) - 1, self.heap)
+		return drop
+	
+	def insert(self, value):
+		self.heap.append(value)
+		self.siftUp()
+	
+	def siftDown(self, idx, length, arr):
+		childOne = idx * 2 + 1
+		while childOne <= length:
+			childTwo = idx * 2 + 2 if idx * 2 + 2 <= length else -1
+			if childTwo != -1 and arr[childTwo][1] < arr[childOne][1]:
+				swap = childTwo
+			else:
+				swap = childOne
+			if arr[swap][1] < arr[idx][1]:
+				self.swap_func(swap, idx, arr)
+				idx = swap
+				childOne = idx * 2 + 1
+			else:
+				return
+	
+	def siftUp(self):
+		idx = len(self.heap) - 1
+		while idx > 0:
+			parentIdx = (idx - 1) // 2
+			if self.heap[idx][1] < self.heap[parentIdx][1]:
+				self.swap_func(idx, parentIdx, self.heap)
+				idx = parentIdx
+			else:
+				return
+	
+	def swap_func(self, i, j, arr):
+		arr[i], arr[j] = arr[j], arr[i]
+
+# without Heaps
+def laptopRentals(times):
+    if len(times) == 0:
+		return 0
+	
+	# we can use `sorted()` either
+	# with [] or without
+	start_times = sorted(x[0] for x in times)
+	end_times = sorted(x[1] for x in times)
+	
+	start = 0
+	end = 0
+	count = 0
+	
+	while start <= len(times) - 1:
+		if start_times[start] >= end_times[end]:
+			# means that our start time will be
+			# after (figure is bigger) than end time
+			count -= 1
+			end += 1
+		count += 1
+		start += 1
+	
+	return count
