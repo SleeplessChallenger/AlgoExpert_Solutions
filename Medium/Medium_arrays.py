@@ -103,6 +103,19 @@ def moveElementToEnd(arr, toMove):
 			right -= 1
 	return arr
 
+# another mine
+def moveElementToEnd(arr, t):
+	i = len(arr) - 1
+	j = 0
+	while j < i:
+		if arr[i] == t:
+			i -= 1
+		else:
+			if arr[j] == t:
+				arr[i], arr[j] = arr[j], arr[i]
+			j += 1
+	return arr
+
 # not mine
 def moveElementToEnd(arr, toMove):
 	i = 0
