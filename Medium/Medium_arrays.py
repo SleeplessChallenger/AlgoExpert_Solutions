@@ -263,6 +263,33 @@ def longestPeak(arr):
 		current_left, current_right = 0, 0
 	return 1 + longest if longest != 0 else 0
 
+# another mine
+def longestPeak(arr):
+    	total = 0
+	for i in range(len(arr)):
+		total = getPeak(i, total, arr)
+
+	return total if total == 0 else total + 1
+		
+def getPeak(i, total, arr):
+	left = i - 1
+	right = i + 1
+	
+	countLeft = 0
+	while left >= 0 and arr[left] < arr[left + 1]:
+			countLeft += 1
+			left -= 1
+
+	countRight = 0
+	while right <= len(arr) - 1 and arr[right] < arr[right -1]:
+			countRight += 1
+			right += 1
+		
+	if countLeft != 0 and countRight != 0:
+		total = max(total, (countLeft + countRight))
+	
+	return total
+
 # not mine
 def longestPeak(arr):
 	longest = 0
