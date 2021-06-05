@@ -173,6 +173,11 @@ def spiralTraverse(arr):
 	st_r, end_r = 0, len(arr) - 1
 	st_c, end_c = 0, len(arr[0]) - 1
 	while st_r <= end_r and st_c <= end_c:
+		# we need `<=` bexause if we have
+		# matrix of one row/one column.
+		# That's why we have additional
+		# check in 3/4 loops to avoid
+		# double counting
 		for a in range(st_c, end_c + 1):
 			result.append(arr[st_r][a])
 		for b in range(st_r + 1, end_r + 1):
