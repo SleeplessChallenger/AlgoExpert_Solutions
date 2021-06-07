@@ -190,6 +190,11 @@ def indexEqualsValue(arr):
 		# if arr[middle - 1] == middle - 1, then eliminate
 		# right half of the algorithm. That's why we have
 		# `else` statement
+		# * because above we return if previous
+		# index > previous value, but what if they're equal?
+		# We don't return it here, but we need to do it further, that's
+		# why use else to incorporate above mentioned case and when
+		# value > idx
 	
 		elif middle > target:
 			# all to the left can't match
