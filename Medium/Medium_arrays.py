@@ -391,19 +391,19 @@ def firstDuplicateValue(arr):
 def mergeOverlappingIntervals(intervals):
 	if len(intervals) <= 1:
 		return intervals
-
+	# when we tweak 'current' outside
+	# of result -> also get influenced
 	intervals.sort(key=lambda x: x[0])
-
+	
+	result = []
 	current = intervals[0]
-	result = [current]
-
+	result.append(current)
+	
 	for next_int in intervals:
-
 		if next_int[0] <= current[1]:
-			current[1] = max(next_int[1], current[1])
-
+			current[1] = max(current[1], next_int[1])
 		else:
-			result.append(next_int)
 			current = next_int
-
+			result.append(current)
+			
 	return result
