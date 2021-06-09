@@ -91,3 +91,96 @@ def getResult(arr):
 
 def getDifference(i, j):
 	return abs(i - j)
+
+# 2 Calendar Matching
+def calendarMatching(calendar1, dailyBounds1, calendar2, dailyBounds2, meetingDuration):
+	newCalen1 = updateCalender(calendar1, dailyBounds1)
+	newCalen2 = updateCalender(calendar2, dailyBounds2)
+	mergedCalen = mergeCalendars(newCalen1, newCalen2)
+	flattened_calen = flatten(mergedCalen)
+	return getResult(flattened_calen, meetingDuration)
+	
+def mergeCalendars(arr1, arr2):
+	i, j = 0, 0
+	result = []
+	while i < len(arr1) and j < len(arr2):
+		if arr1[i][0] > arr2[j][0]:
+			result.append(arr2[j])
+			j += 1
+		else:
+			result.append(arr1[i])
+			i += 1
+			
+	while i < len(arr1):
+		result.append(arr1[i])
+		i += 1
+		
+	while j < len(arr2):
+		result.append(arr2[j])
+		j += 1
+	
+	return result
+
+def flatten(arr):
+	# find values that overlap
+	# 1
+	if len(arr) < 2:
+		return arr
+
+	output = []
+	current = arr[0]
+	output.append(current)
+	for next_arr in arr:
+		if next_arr[0] <= current[1]:
+			current[1] = max(current[1], next_arr[1])
+		else:
+			current = next_arr
+			output.append(current)
+			
+	
+	return output
+	# 2
+	# result = [arr[0][:]]
+	# for i in range(1, len(arr)):
+	# 	curr = arr[i]
+	# 	# !!!below use `-1` and not `i - 1`
+	# 	# as we need from `result` and not from
+	# 	# array
+	# 	prev = result[-1]
+	# 	# if previous meeting ends
+	# 	# after current starts
+	# 	if curr[0] <= prev[1]:
+	# 		newMeet = [prev[0], max(curr[1], prev[1])]
+	# 		result[-1] = newMeet
+	# 	else:
+	# 		result.append(curr[:])
+	# return result
+
+def getResult(arr, t):
+	res = []
+	for i in range(1, len(arr)):
+		prevEnd = arr[i - 1][1]
+		currStart = arr[i][0]
+		duration = currStart - prevEnd
+		if duration >= t:
+			res.append([prevEnd, currStart])
+	
+	return list(map(lambda x: [minTotime(x[0]), minTotime(x[1])], res))
+	
+def updateCalender(arr, bound):
+	newArr = arr[:]
+	newArr.insert(0, ['0:00', bound[0]])
+	newArr.append([bound[1], '23:59'])
+	return list(map(lambda x: [timeTomin(x[0]), timeTomin(x[1])], newArr))
+
+def timeTomin(t):
+	h, m = list(map(int, t.split(':')))
+	# a, b = map(int, t.split(':'))
+	return h * 60 + m
+
+def minTotime(var):
+	h = var // 60
+	m = var % 60
+	hStr = str(h)
+	mStr = '0' + str(m) if m < 10 else str(m)
+	return hStr + ':' + mStr
