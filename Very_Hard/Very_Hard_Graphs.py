@@ -110,3 +110,106 @@ def upperRight(c1, c2):
 def getStr(coord):
 	x, y = coord
 	return str(x) + ':' + str(y)	
+
+# 2 Airport Connections
+
+# 1. create graph which incorporates all
+#    airports and reachable destiantions
+# 2. populate `start airport` with airports
+#	 that are reachable from it. Also traverse
+# 	 through all connections of those airports.
+#	 After that, add all unreachable to ht 
+#	 and set their `.reachable` to False
+# 3. write how many reachable airports we have
+#	 for every unreachable airport so as to 
+#	 pick the ones with higher scores then
+# 4. sort by most amount of unreachable in 
+#	 `unreachableAirports` where every node
+#	 is class instance with all properties.
+#	 Look for `***`
+def airportConnections(airports, routes, startingAirport):
+    graph = createGraph(airports, routes)
+	unreachableAirports = findUnreachableFromStartingAirport(
+								startingAirport, graph, airports)
+	defineScoreUnreachable(unreachableAirports, graph)
+	return getMinRequired(unreachableAirports, graph)
+
+def createGraph(airports, routes):
+	graph = {}
+	for airport in airports:
+		graph[airport] = AirportGraph(airport)
+	for a_port, destination in routes:
+		graph[a_port].connections.append(destination)
+	return graph
+	
+def findUnreachableFromStartingAirport(start, graph, airports):
+	possibleToVisit = {}
+	dfsAllFromStartingAirport(possibleToVisit, start, graph)
+	unreachable = []
+	for airport in airports:
+		if airport in possibleToVisit:
+			continue
+		airNode = graph[airport]
+		# receive class `AirportGraph`
+		airNode.reachable = False
+		# add `node` not simple `airport name`
+		# because we need easy access to all
+		# properties
+		unreachable.append(airNode)
+	return unreachable
+	
+def dfsAllFromStartingAirport(possibleToVisit, airport, graph):
+	if airport in possibleToVisit:
+		return
+	nodes = graph[airport].connections
+	possibleToVisit[airport] = True
+	for port in nodes:
+		dfsAllFromStartingAirport(possibleToVisit, port, graph)
+
+def defineScoreUnreachable(unreachableAirports, graph):
+	for node in unreachableAirports:
+		airport = node.airport
+		unreachable = []
+		# pass 0 so as not to double count
+		# `starting node`
+		dfsUnreachableConnections(0, unreachable, airport, graph, {})
+		node.unreachableAirports = unreachable
+
+def dfsUnreachableConnections(i, unreachable, airport, graph, explored):
+	#### Controversial one as we've picked only unreachable
+	if graph[airport].reachable:
+		return
+	####
+	if airport in explored:
+		return
+	explored[airport] = True
+	if i != 0:
+		unreachable.append(airport)
+	connections = graph[airport].connections
+	for node in connections:
+		dfsUnreachableConnections(i + 1, unreachable, node, graph, explored)
+
+def getMinRequired(unreachableAirports, graph):
+	unreachableAirports.sort(key=lambda x: len(x.unreachableAirports),
+							 reverse=True)
+	count = 0
+	for node in unreachableAirports:
+		if node.reachable:
+			continue
+		count += 1
+		# ***
+		# mark all connections of unreachable
+		# airport with highest score. Then we
+		# won't iterate over those that can be
+		# reached from current airport
+		for nextNode in node.unreachableAirports:
+			graph[nextNode].reachable = True
+	return count
+	
+
+class AirportGraph:
+	def __init__(self, airport):
+		self.airport = airport
+		self.connections = []
+		self.reachable = True
+		self.unreachableAirports = []
