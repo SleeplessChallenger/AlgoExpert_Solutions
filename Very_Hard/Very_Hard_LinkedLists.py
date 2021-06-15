@@ -1,3 +1,4 @@
+# 1 LRU Cache
 class LRUCache:
     def __init__(self, maxSize):
         self.maxSize = maxSize or 1
@@ -106,3 +107,82 @@ class Node:
 		
 		self.next = None
 		self.prev = None
+
+
+# 2 Rearrange Linked List
+class LinkedList:
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
+
+def rearrangeLinkedList(head, k):
+	curr = head
+	smallerHead = None
+	smallerTail = None
+	biggerHead = None
+	biggerTail = None
+	equalHead = None
+	equalTail = None
+	
+	while curr:
+		if curr.value < k:
+			smallerHead, smallerTail = getAdjacent(curr, smallerHead, smallerTail)
+		elif curr.value > k:
+			biggerHead, biggerTail = getAdjacent(curr, biggerHead, biggerTail)
+		else:
+			equalHead, equalTail = getAdjacent(curr, equalHead, equalTail)
+		# use `prevNode` to exclude possible bugs
+		# when new node still points to another node
+		# which it has previosly precede
+		prevNode = curr
+		curr = curr.next
+		prevNode.next = None
+
+	smaller_equalHead, smaller_equalTail = connectLists(smallerHead, smallerTail,
+													    equalHead, equalTail)
+	newHead, newTail = connectLists(smaller_equalHead, smaller_equalTail,
+								    biggerHead, biggerTail)
+	# `newHead` instead of `smaller_equalHead` as
+	# we can have `k` < every value in LinkedList
+	# => only bigHead & bigTail
+	return newHead
+
+def getAdjacent(node, head, tail):
+	# newHead = head
+	
+	# we can get by wihtout newHead,
+	# but newTail is essential.
+	# a) if tail is None we are
+	# to specify that our tail is
+	# updated
+	# b) but if tail is not None,
+	# then we can't assign `node` to it
+	# as it'll be rewritten, we're to add
+	# new node via `.next` property
+	newTail = node
+	if head is None:
+		head = node
+	# not simply return `newTail`
+	# but also chain previous tail
+	# with new one
+	if tail is not None:
+		tail.next = node
+	
+	return head, newTail
+
+def connectLists(smallHead, smallTail, bigHead, bigTail):	
+	# we need smallHead if it exists as
+	# we're to return eventual new head
+	# -> only if it's None choose bigHead
+	newHead = bigHead if smallHead is None else smallHead
+	
+	# we need bigTail if it exists as
+	# we're to connect next part (bigger one)
+	# to it -> only if bigTail is None choose smallTail
+	newTail = smallTail if bigTail is None else bigTail
+	
+	if smallTail:
+		smallTail.next = bigHead
+	
+	return newHead, newTail
