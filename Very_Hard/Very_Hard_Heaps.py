@@ -1,4 +1,26 @@
 # 1 Merge Sorted Arrays
+# mine
+def mergeSortedArrays(arr):
+	result = []
+	temp = [0 for _ in arr]
+	while True:
+		idx = None
+		smallest = float('inf')
+		for i in range(len(arr)):
+			if temp[i] >= len(arr[i]):
+				continue
+			num = arr[i][temp[i]]
+			if smallest > num:
+				smallest = num
+				idx = i
+				
+		if smallest == float('inf'):
+			break
+		result.append(smallest)
+		temp[idx] += 1
+
+	return result		
+
 # first
 # T: O(n*k) S: O(n + k)
 def mergeSortedArrays(arr):
