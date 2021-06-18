@@ -1,9 +1,9 @@
 # 1 Knuth-Morris-Pratt Algorithm
 def knuthMorrisPrattAlgorithm(string, substring):
-	pattern = buildPattern(string, substring)
+	pattern = buildPattern(substring)
 	return findResult(string, substring, pattern)
 
-def buildPattern(string, substring):
+def buildPattern(substring):
 	i = 1
 	j = 0
 	arr = [-1 for _ in range(len(substring))]
