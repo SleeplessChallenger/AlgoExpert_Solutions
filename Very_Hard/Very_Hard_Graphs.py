@@ -109,7 +109,7 @@ def upperRight(c1, c2):
 
 def getStr(coord):
 	x, y = coord
-	return str(x) + ':' + str(y)	
+	return str(x) + ':' + str(y)
 
 # 2 Airport Connections
 
@@ -176,10 +176,14 @@ def defineScoreUnreachable(unreachableAirports, graph):
 		node.unreachableAirports = unreachable
 
 def dfsUnreachableConnections(i, unreachable, airport, graph, explored):
-	#### Controversial one as we've picked only unreachable
+	# as there can be airport with direction
+	# to it from one in unreachable, but not vice versa,
+	# and we can reach this airport from `starting`:
+	# 'starting' -> this airport <- child <- `airport`
+	# * but we cannot go from `starting` to `airport`
+	# which makes latter one unreachable
 	if graph[airport].reachable:
 		return
-	####
 	if airport in explored:
 		return
 	explored[airport] = True
