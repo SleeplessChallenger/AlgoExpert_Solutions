@@ -184,3 +184,186 @@ def minTotime(var):
 	hStr = str(h)
 	mStr = '0' + str(m) if m < 10 else str(m)
 	return hStr + ':' + mStr
+
+# 3 Waterfall Streams
+# 3 - 1
+# T: O(w^2 * h) S: O(1)
+# without separate variables,
+# just using `+=`
+def waterfallStreams(arr, source):
+    arr[0][source] = -1
+	
+	for i in range(1, len(arr)):
+		# we cannot use `source`
+		# as water will be splitted
+		# hence we iterate over `prev row`
+		for j in range(len(arr[i - 1])):
+			# if above row doesn't
+			# have water -> skip.
+			# `>= 0` is essential as
+			# `- 1` will be changed
+			if arr[i - 1][j] >= 0:
+				continue
+			# if curr row & curr col != block
+			elif arr[i][j] != 1:
+				arr[i][j] += arr[i - 1][j]
+				continue
+			
+			# elif it's a block
+			elif arr[i][j] == 1:
+				left = j - 1
+				while left >= 0:
+# 1. # # # _ _
+# 2. _ _ _ _ #
+# 3. _ _ _ # _
+# if we're at 3rd row (block)
+# and at 2nd row water will be
+# splitted then right direction
+# is a wall. Same check with left
+					if arr[i - 1][left] == 1:
+						break
+					if arr[i][left] != 1:
+						arr[i][left] += arr[i - 1][j] * 0.5
+						break
+					left -= 1
+						
+				right = j + 1
+				while right < len(arr[i - 1]):
+					if arr[i - 1][right] == 1:
+						break
+					if arr[i][right] != 1:
+						arr[i][right] += arr[i - 1][j] * 0.5
+						break
+					right += 1
+
+	result = list(map(lambda x: x * -100, arr[-1]))
+	return result
+
+# 3 - 2
+# with separate `water` variable
+def waterfallStreams(arr, source):
+    arr[0][source] = -1
+	
+	for i in range(1, len(arr)):
+		# we cannot use `source`
+		# as water will be splitted
+		# hence we iterate over `prev row`
+		for j in range(len(arr[i - 1])):
+			# if above row doesn't
+			# have water -> skip.
+			# `>= 0` is essential as
+			# `- 1` will be changed
+			if arr[i - 1][j] >= 0:
+				continue
+			# if curr row & curr col != block
+			elif arr[i][j] != 1:
+				arr[i][j] += arr[i - 1][j]
+				continue
+			
+			# elif it's a block	
+			water = arr[i - 1][j] / 2
+
+			left = j 
+			while left - 1 >= 0:
+				left -= 1
+				if arr[i - 1][left] == 1:
+					break
+				if arr[i][left] != 1:
+					arr[i][left] += water
+					break
+
+			right = j
+			while right + 1 < len(arr[i - 1]):
+				right += 1
+				if arr[i - 1][right] == 1:
+					break
+				if arr[i][right] != 1:
+					arr[i - 1][right] += water
+					break
+
+	result = list(map(lambda x: x * -100, arr[-1]))
+	return result
+
+# 4 Minimun Area Rectangle
+# T: O(n^2) S: O(n)
+def minimumAreaRectangle(points):
+    visited = {}
+	minDiff = float('inf')
+	plot = createPlot(points)
+	plotKeys = sorted(plot.keys())
+	# use separate variable
+	# as `sorted()` will remove `values()`
+	for x in plotKeys:
+		values = plot[x]
+		values.sort()
+		# `values` is subarray =>
+		# time compl. isn't n^2*logn, but n*logn
+		for val in range(len(values)):
+			# iterate till current
+			for prevVal in range(0, val):
+				# create all possible pairs
+				# and store them in `visited`
+				curr = values[val]
+				prev = values[prevVal]
+				yKey = f"{prev}:{curr}"
+					
+				if yKey in visited:
+					# if we have such y-values
+					# that means we can form
+					# a rectangle with
+					# similar/another x
+					# `- visited[yKey]` is our prev
+					# x which is to the left of current
+					temp = (curr - prev) * (x - visited[yKey])
+					minDiff = min(minDiff, temp)
+				# update key with y-values
+				# with the most recent x
+				# as we need min() so there is
+				# no need to keep furtherest
+				visited[yKey] = x
+	
+	return minDiff if minDiff != float('inf') else 0
+	
+def createPlot(plots):
+	ht = {}
+	for value in plots:
+		x, y  = value
+		if x not in ht:
+			ht[x] = []
+		ht[x].append(y)
+
+	return ht
+
+# T: O(n^2) S: O(n)
+def minimumAreaRectangle(points):
+    allPoints = createSet(points)
+	minVal = float('inf')
+	
+	for point in range(len(points)):
+		curr = points[point]
+		for prevPoint in range(0, point):
+			prev = points[prevPoint]
+			if curr[0] != prev[0] and curr[1] != prev[1]:
+				# as we need different x & y values
+				# in two points (but similar x and y is OK)
+				oppositeOne = f"{curr[0]}:{prev[1]}"
+				oppositeTwo = f"{prev[0]}:{curr[1]}"
+	
+				if oppositeOne in allPoints and oppositeTwo in allPoints:
+					temp = abs(curr[0] - prev[0]) * abs(curr[1] - prev[1])
+					minVal = min(temp, minVal)
+				
+	return minVal if minVal != float('inf') else 0
+	
+def createSet(points):
+	res = set()
+	for point in points:
+		# we cannot store list()
+		# as `in`check will give
+		# False, hence we create
+		# string key
+		x, y = point
+		key = f"{x}:{y}"
+		res.add(key)
+
+	return res
