@@ -17,10 +17,10 @@ class SuffixTrie:
 
 	def contains(self, string):
 		node = self.root
-		for x in rane(string):
+        	for x in range(len(string)):
 			if string[x] not in node:
-				return False
-			node = node[x]
+					return False
+			node = node[string[x]]
 		return self.endSymbol in node
 
 # not mine
