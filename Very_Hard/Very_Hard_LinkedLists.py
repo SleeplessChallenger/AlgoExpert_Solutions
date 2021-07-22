@@ -186,3 +186,150 @@ def connectLists(smallHead, smallTail, bigHead, bigTail):
 		smallTail.next = bigHead
 	
 	return newHead, newTail
+
+# 3 LinkedList Palindrome
+# using stack
+class LinkedList:
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
+# using stack
+# T: O(n) S: O(n)
+def linkedListPalindrome(head):
+    stack = []
+	getNodes(head, stack)
+	curr = head
+
+	while curr.next:
+		node = stack.pop()
+		if node.value != curr.value:
+			return False
+		curr = curr.next
+	
+	return True
+
+def getNodes(node, stack):
+	while node:
+		stack.append(node)
+		node = node.next
+
+# This is an input class. Do not edit.
+class LinkedList:
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
+# using 2 pointers & reverse
+def linkedListPalindrome(head):
+	# use two pointers
+	# to find "second head"
+	newHead = findHead(head)
+	curr = head
+
+	# reverse second half
+	newHead = reverse(newHead)
+	
+	while newHead:
+	# as len(newHead) >= len(head)
+	# we don't need to put `head`
+		if curr.value != newHead.value:
+			return False
+		
+		curr = curr.next
+		newHead = newHead.next
+	
+	return True
+	
+def findHead(currHead):
+	newHead = currHead
+	
+	while newHead and newHead.next:
+		# when even: new head is EQUAL second half
+		# when odd: new head's part > first part
+		
+		# 0 -> 1 -> 2 -> 3 -> 2 -> 1 -> 0
+		               # nH
+		newHead = newHead.next.next
+		currHead = currHead.next
+		
+	return currHead
+
+def reverse(head):
+    node = head
+	pr = None
+	nx = None
+	
+	while node:
+		nx = node.next
+		node.next = pr
+		pr = node
+		node = nx
+		
+	return pr
+
+# 4 Zip Linked List
+# This is an input class. Do not edit.
+class LinkedList:
+    def __init__(self, value):
+        self.value = value
+        self.next = None
+
+
+def zipLinkedList(linkedList):
+	# use 2 pointers and slow point.next is our new head
+	node = getTailLists(linkedList)
+	newHead = node.next
+	# as we need to traverse from
+	# the end -> reverse
+	newHead = reverseHead(newHead)
+	
+	# sever the connection
+	node.next = None
+	
+	curr = linkedList
+
+	
+	while newHead:
+		# as we'll replace connections
+		# => save `.next` at first
+		afterHead = newHead.next
+		afterNode = curr.next
+		
+		# at first do the ZIP
+		# then connect that ZIPPED node
+		# to the `.next` from above
+		curr.next = newHead
+		newHead.next = afterNode
+		
+		# place `current` variables
+		# for the next iteration
+		curr = afterNode
+		newHead = afterHead
+		
+	return linkedList
+		
+def getTailLists(head):
+	slow = head
+	fast = head
+	
+	while fast and fast.next:
+		# even: end at last node
+		# odd: and at None after last node
+		slow = slow.next
+		fast = fast.next.next
+	
+	return slow
+
+def reverseHead(head):
+	node = head
+	prev = None
+	nx = None
+	
+	while node:
+		nx = node.next
+		node.next = prev
+		prev = node
+		node = nx
+	
+	return prev
