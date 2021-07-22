@@ -206,3 +206,70 @@ def countDepths(root, ht, htD):
 	if root.right:
 		countDepths(root.right, ht, htD)
 		htD[root] += ht[root.right] + htD[root.right]
+
+# 5 Compare Leaf Traversal
+
+class BinaryTree:
+    def __init__(self, value, left=None, right=None):
+        self.value = value
+        self.left = left
+        self.right = right
+
+
+# T: O(n + m) S: O(n + m)
+def compareLeafTraversal(tree1, tree2):
+    treeOneLeaves = dfs(tree1, [])
+	treeTwoLeaves = dfs(tree2, [])
+
+	if len(treeOneLeaves) != len(treeTwoLeaves):
+		return False
+	
+	return all(map(lambda x, y: x == y, treeOneLeaves, treeTwoLeaves)) 
+	
+def dfs(tree, arr):
+	if tree.left:
+		dfs(tree.left, arr)
+	if tree.right:
+		dfs(tree.right, arr)
+	
+	if not tree.left and not tree.right:
+		arr.append(tree.value)
+	
+	return arr
+
+# T: O(n + m) S: O(h1 + h2)
+def compareLeafTraversal(tree1, tree2):
+    stack1 = [tree1]
+	stack2 = [tree2]
+	
+	while len(stack1) != 0 and len(stack2) != 0:
+		currLeave1 = getLeave(stack1)
+		currLeave2 = getLeave(stack2)
+		
+		if currLeave1.value != currLeave2.value:
+			return False
+		
+	return len(stack1) == 0 and len(stack2) == 0
+	
+def getLeave(stack):
+	node = stack.pop()
+	
+	while not isLeaf(node):
+		# right first because 
+		# we want .left to be
+		# popped at first
+		if node.right:
+			stack.append(node.right)
+			
+		if node.left:
+			stack.append(node.left)
+
+		node = stack.pop()
+		
+	return node
+	
+def isLeaf(node):
+	# if at least one is not None -> False
+	# hence it's not a leaf and we'll
+	# continue our loop in `getLeave`
+	return node.right is None and node.left is None
