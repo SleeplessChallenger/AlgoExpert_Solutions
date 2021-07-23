@@ -217,3 +217,177 @@ class AirportGraph:
 		self.connections = []
 		self.reachable = True
 		self.unreachableAirports = []
+
+# 3 Detect Arbitrage
+
+#Explanation
+
+# currency = vertice
+# rate = edge
+
+# use Bellman-Ford algorithm
+# to detect negative weight cycles
+# (and it can handle negative weight edges).
+# Initially: if we start from 1.0 USD and
+# if we come back to USD with greater number
+# -> What we need! (actually, what we try to
+# find if edges multiply by 1)
+
+# negative weight cycle = positive mult. cycle (descr. above)
+
+# 1. modify graph so that every edge
+# is a `-log(edge)`
+# log(a * b) > log(1) => log(a * b) > 0
+# But we need negative weight cycle, not `> 0`
+# Hence we mult. eveything by `-1`:
+# - ( log(a) + log(b) ) < 0
+# Note: to use B-F alg. we need to have all nodes
+# connected, thus if we add new node, it must be
+# connected to all existing nodes
+# 2. Traverse the graph `realixing` (looking at) every edge
+#  to find the shortest path. Amount of nodes to relax is `n - 1`.
+# After we've relaxed all nodes once, we need to repeat
+# the process one more time, and if some distance becomes
+# shorter => "neagtive weight cycle is found"
+# 3. Start from CAD, relax all other nodes.
+#		  CAD  USD  GBP
+#  start: [0,  inf, inf] -> [0, -2, inf] -> [0, -2, -6]
+#   Then switch to USD and do the same.
+
+#  start: [0, -2, -6] -> !!!from USD to CAD we take -2 and
+#	add 1 (imagine we have USD -> CAD == 1) [-1, -2, -6]
+#	-> take -2 and add 4 (USD -> GBP == 4), but it's not
+# smaller than -6, skip it [-1, -2, -6]
+
+#  	And last is GBP -> same process.
+# start: [-1, -2, -6] -> (GBP -> CAD == 3) -6 + 3 = -3, 
+# it's smaller than -1, hence update [-3, -2, -6] ->
+# (GBP -> USD == 3) -6 + 3 = -3, hence update [-3, -3, -6]
+
+# first value is current node from which we `act`
+# and second value is edge. Result is compared to curr.
+# result TO THE VERTIX. Ex: first val: USD: -2, second val:
+# USD -> CAD: 1. Result: -2 + 1 = -1 compared to [CAD: 0]
+
+# 4. All the time throughout 3rd point we have the same
+# data structure which we modify to find the shortest path.
+
+# 5. do the process again one more time.
+#			   CAD USD GBP
+# CAD vertex: [-3, -3, -6] -> CAD - USD: -3 - 2 = -5 [-3, -5, -6]
+#							  CAD - GBP: -3 - 6 = -9 [-3, -5, -9]
+# USD vertex: [-3, -5, -9] -> USD - CAD: -5 + 1 = -4 [-4, -5, -9]
+#							  USD - GBP: -5 + 4 not > than -9
+# GBP vertex: [-4, -5, -9] -> GBP - CAD: -9 + 3 = -6 [-6, -5, -9]
+#							  GBP - USD: -9 + 3 = -6 [-6, -6, -9]
+# 6. If there is `negative weight cycle`, every iteration
+#	will bring more and more negative values
+
+# with 2D array
+import math
+
+def detectArbitrage(exchangeRates):
+    graph = createGraph(exchangeRates)
+	return findNegCycle(graph, 0)
+
+def findNegCycle(graph, start):
+	# or we can:
+	# 1. remove -1
+	# 2. return True in the end
+	# instead of additional func()
+	distances = [float('inf') for _ in range(len(graph))]
+	# instead of float we can place `0`
+	distances[start] = 0
+	
+	n = len(graph) - 1
+	# as we need to make `n - 1` calls
+	for _ in range(n):
+		if not relaxEdges(graph, distances):
+		# if some updates are done to
+		# distances -> True else False
+			return False
+
+	return relaxEdges(graph, distances)
+	# relax once more time. If found smaller
+	# -> True. Else False
+
+def relaxEdges(graph, dist):
+	smallerDone = False
+	
+	for idx in range(len(graph)):
+		edges = graph[idx]
+		for idx2 in range(len(edges)):
+			edge = edges[idx2]
+			newDist = dist[idx] + edge
+			# `dist[idx]` means take
+			# one vertex per outer loop
+			# and add others. Then change
+			# vertex.
+			# I.e. take one from which we go,
+			# add others to which we go.
+			if newDist < dist[idx2]:
+				# compare "TO which we go"
+				dist[idx2] = newDist
+				smallerDone = True
+	
+	return smallerDone
+	
+def createGraph(rates):
+	graph = []
+	
+	for i in range(len(rates)):
+		graph.append([])
+		for j in range(len(rates[i])):
+			rate = rates[i][j]
+			graph[i].append(-math.log10(rate))
+
+	return graph
+
+# with hashtable
+import math
+
+def detectArbitrage(exchangeRates):
+    graph = createGraph(exchangeRates)
+	return findNegCycle(graph, 0)
+
+def findNegCycle(graph, start):
+	distances = [float('inf') for _ in graph.keys()]
+	distances[start] = 0
+	
+	n = len(graph.keys() ) - 1
+	# as we need to make `n - 1` calls
+	for _ in range(n):
+		if not relaxEdges(graph, distances):
+		# if some updates are done to
+		# distances -> True else False
+			return False
+	
+	return relaxEdges(graph, distances)
+	# relax once more time. If found smaller
+	# -> True. Else False
+
+def relaxEdges(graph, dist):
+	smallerDone = False
+	edges = graph.keys()
+	for idx in edges:
+		values = graph[idx]
+		for idx2 in range(len(values)):
+			val = values[idx2]
+			newDist = dist[idx] + val
+			if newDist < dist[idx2]:
+				dist[idx2] = newDist
+				smallerDone = True
+	
+	return smallerDone
+	
+def createGraph(rates):
+	graph = {}
+	
+	for i in range(len(rates)):
+		for j in range(len(rates[i])):
+			rate = rates[i][j]
+			if i not in graph:
+				graph[i] = []
+			graph[i].append(-math.log10(rate))
+
+	return graph
