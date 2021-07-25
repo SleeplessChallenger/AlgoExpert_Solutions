@@ -70,3 +70,60 @@ def doMerge(arr, aux, left, right, middleIdx):
 		arr[start] = aux[fromMiddle]
 		fromMiddle += 1
 		start += 1
+
+# 2 Count Inversions
+# T: O(n*log n) S: O(n)
+
+# inversion in left + inversion in right
+# + inversion in both => total num of inversions
+
+# `len(array) - idx = inversions` in left array as
+# we insert num from right array before ALL the 
+# nums in left array (if curr in left > curr in right).
+# Because left array initially should be before right,
+# we don't care if something in `right > left`
+def countInversions(arr):
+    return count_merge(arr, 0, len(arr))
+
+def count_merge(arr, start, end):
+	# <= not == as can be: []
+	if end - start <= 1:
+		return 0
+	
+	middle = (start + end) // 2
+	leftInv = count_merge(arr, start, middle)
+	rightInv = count_merge(arr, middle, end)
+	# called after prev. two as we want
+	# out array to be sorted
+	bothInv = mergePart(arr, start, middle, end)
+	return leftInv + rightInv + bothInv
+
+def mergePart(arr, start, middle, end):
+	sortedArr = []
+	left = start
+	right = middle
+	inv = 0
+
+	while left < middle and right < end:
+		if arr[left] > arr[right]:
+			inv += middle - left
+			sortedArr.append(arr[right])
+			right += 1
+		else:
+			sortedArr.append(arr[left])
+			left += 1
+
+	while left < middle:
+		sortedArr.append(arr[left])
+		left += 1
+		
+	while right < end:
+		sortedArr.append(arr[right])
+		right += 1
+	
+	# sortedArr += arr[left:middle] + arr[right:end]
+	
+	for i in range(len(sortedArr)):
+		arr[start + i] = sortedArr[i]
+	
+	return inv
