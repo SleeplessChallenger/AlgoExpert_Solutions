@@ -220,7 +220,7 @@ class AirportGraph:
 
 # 3 Detect Arbitrage
 
-#Explanation
+# Explanation
 
 # currency = vertice
 # rate = edge
@@ -246,7 +246,7 @@ class AirportGraph:
 # connected to all existing nodes
 # 2. Traverse the graph `realixing` (looking at) every edge
 #  to find the shortest path. Amount of nodes to relax is `n - 1`.
-# After we've relaxed all nodes once, we need to repeat
+# After we've relaxed all nodes (n - 1) times, we need to repeat
 # the process one more time, and if some distance becomes
 # shorter => "neagtive weight cycle is found"
 # 3. Start from CAD, relax all other nodes.
@@ -391,3 +391,102 @@ def createGraph(rates):
 			graph[i].append(-math.log10(rate))
 
 	return graph
+
+# 4 Two-Edge-Connected Graph
+
+# Explanation
+
+# Graph: unweighted and undirected. No parallel edges
+# edges = [[1, 2, 5], [0, 2], [0, 1, 3],
+#		   [2, 4, 5], [3, 5], [0, 3, 4]]
+
+# vertices = 6; {0: [1, 2, 5], 1: [0, 2], 2: [0, 1, 3],
+# 			     3: [2, 4, 5], 4: [3, 5], 5: [0, 3, 4]}
+
+# two-edge: every vertex has reverse connection from 
+# each of the outbound verticies. + it does mean if
+# you remove one edge, then graph doesn't become
+# disconnected, i.e. you can still visit ALL
+# the vertices from either of the vertex (
+# no so-called `Bridge`)
+
+# edge: tree & back. Tree - edge that connects new
+# vertices in dfs. Back - edge that comes from already
+# visited node to node that has been visited before it (ancestor).
+# => check that every tree edge has back edge by looking
+# at tree edge DESCENDANTS which must connect to node FROM WHICH
+# tree edge came from. Ex: 0 -> 1. 1 is Tree edge, hence either
+# of the descendants of 1 should connect to 0. Because if we
+# remove conn. from 0 to 1 we still will be able to reach 1
+# from 0 by: 1) going through descendants of 1, landing at 0
+# 2) then reaching through other nodes at 1
+
+# Steps:
+#	
+# 1. don't consider node you come from
+# 2. have 2 nums: order visited and arrival time
+# 3. when at edge check for other visited nodes and
+# if node is such -> check for it's order visited
+# (not arrival time) and if it's `< curr. edge arrival time`
+# -> replace curr. edge arrival time. It does mean we can access
+# from curr. node ANCESTOR with smaller arrival time
+# 4. after we've visited all nodes, we'll go back in 
+# recursive call stack and update all previous arrival times
+# if they're bigger than the one coming from recursive call.
+# In result, if return value from dfs() of start node
+# == arrival time of start node => no bridge.
+# If min. arrival time of accessible ancestor isn't
+# smaller than curr. edge => bridge. `return -1`
+
+# Overall there're 2 steps:
+# 1. graph is connected
+# 2. no bridge
+
+def twoEdgeConnectedGraph(edges):
+    if len(edges) == 0:
+		return True
+	
+	# arrival time of all vertices
+	arrivalTimes = [-1 for _ in range(len(edges))]
+	
+	# _, _, currVertex, currArrivalTime, parent
+	if checkAllArrivalTimes(arrivalTimes, edges, 0, 1, -1) == -1:
+		return False
+	
+	return checkArrival(arrivalTimes)
+
+def checkArrival(times):
+	for t in times:
+		if t == -1:
+			return False
+	
+	return True
+
+def checkAllArrivalTimes(times, edges, currVertex, currTime, parent):
+	# currTime of the first node can be 0.
+	# It is at what pos. we visited this node
+	minTime = currTime
+	times[currVertex] = currTime
+	
+	for edge in edges[currVertex]:
+		if times[edge] == -1:
+			# this OUTBOUND vertex hasn't
+			# already been visited
+			minTime = min(minTime, checkAllArrivalTimes(
+				times, edges, edge, currTime + 1, currVertex))
+		elif edge != parent:
+			# vertex has already been visited
+			# AND it's not the one we came from.
+			# Remember: we disregard parent node
+			# and look at other edges (don't
+			# consider tree edge)
+			minTime = min(minTime, times[edge])
+	
+	# 1. we're not on the start node
+	# 2. if minArrivalTime is still the same
+	# as it was in the beginning =>
+	# we have found a bridge
+	if parent != -1 and currTime == minTime:
+		return -1
+	
+	return minTime
