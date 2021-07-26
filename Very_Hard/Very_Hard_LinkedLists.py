@@ -333,3 +333,47 @@ def reverseHead(head):
 		node = nx
 	
 	return prev
+
+# 5 Node Swap
+
+# T: O(n) S: O(n)
+# issue is that we don't adjust
+# connection: 0 -> 2, but should be 0 -> 3;
+# hence simple swap won't work
+def nodeSwap(head):
+	if head is None or head.next is None:
+		return head
+	
+	nx = head.next
+	afterNext = nx.next
+	head.next = nodeSwap(afterNext)
+	
+	nx.next = head
+    
+	return nx
+
+# iterative
+def nodeSwap(head):
+    # create dummy node to
+	# have `prev` node
+	temp = LinkedList(0)
+	temp.next = head
+	prev = temp
+	
+# -1 -> 0 -> 1 -> 2 -> 3 -> 4 -> 5
+#                 f    s
+
+# -1 -> 1 -> 0 -> 2 
+#			 p    
+
+	while prev.next and prev.next.next:
+		first = prev.next
+		second = first.next
+		
+		first.next = second.next
+		second.next = first
+		prev.next = second
+		
+		prev = first
+		
+	return temp.next	
