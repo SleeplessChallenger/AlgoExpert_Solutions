@@ -367,3 +367,86 @@ def createSet(points):
 		res.add(key)
 
 	return res
+
+# 5 Line Through Points
+# `points` has 1. no dupl 2. len() >= 1
+# points = [[x, y], [x, y] ...]
+# slope = (y2 - y1) / (x2 - x1)
+# Steps:
+# 	1. traverse with double loop
+# 	2. create ht to put all the possible lines
+# 		and their number
+# 		- key will be "a/b" reduced & str
+# 	3. after every iteration of lower loop
+# 		we take biggest number and keep `maxNum`
+# 	4. after we start new outer loop -> new ht
+
+def lineThroughPoints(points):
+	return createPoints(points)
+
+def createPoints(points):
+	maxLines = 1
+	# as at least one point present
+	
+	for i in range(len(points)):
+		ht = {}
+		coord_one = points[i]
+		for j in range(i + 1, len(points)):
+			coord_two = points[j]
+			rise, run = addPoints(coord_one, coord_two)
+			# slope = rise/run
+			slopeKey = stringify(rise, run)
+			
+			if slopeKey not in ht:
+				ht[slopeKey] = 1
+				
+			ht[slopeKey] += 1
+
+		currMax = max(ht.values(), default=0)
+		# `default` as if we have no values -> error
+		maxLines = max(maxLines, currMax)
+	
+	return maxLines
+
+def addPoints(coord_one, coord_two):
+	x1, y1 = coord_one
+	x2, y2 = coord_two
+	
+	slope = [1, 0]
+	# if vertical line -> no slope
+	
+	if x2 != x1:
+		yNew = y2 - y1
+		xNew = x2 - x1
+		gcd = makeGCD(abs(yNew), abs(xNew))
+		# abs() because `makeGCD` doesn't work with negative
+		xNew = xNew // gcd
+		yNew = yNew // gcd
+		
+		if xNew < 0:
+		# 1. xNew < 0 & yNew < 0 => positive
+			# our changes will make num positive
+		# 2. xNew < 0 & yNew > 0 => negative
+			# we'll convert xNew to pos, but instead
+			# yNew will hold neg value
+		# 3. xNew > 0 & yNew > 0 => positive
+		# 4. xNew > 0 & yNew < 0 => negative
+			# yNew will already have neg in numerator
+			xNew *= -1
+			yNew *= -1
+		
+		slope = [yNew, xNew]
+		
+	return slope
+			
+def stringify(key1, key2):
+	return f"{key1}:{key2}"
+	
+def makeGCD(a, b):
+	while True:
+		if a == 0:
+			return b
+		if b == 0:
+			return a
+		
+		a, b = b, a % b
