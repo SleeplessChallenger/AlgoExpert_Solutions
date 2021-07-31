@@ -241,6 +241,8 @@ def dijkstrasAlgorithm(start, edges):
 	while len(visited) != numEdges:
 		vertex, currMinDist = getVertexMinDist(minDist, visited)
 
+		# it means we've already seen all other nodes
+		# with smaller distances
 		if currMinDist == float('inf'):
 			break
 		
@@ -271,7 +273,9 @@ def getVertexMinDist(minDist, visited):
 
 		if vertex in visited:
 			continue
-		
+		# `<=` as we may have nodes that are detached
+		# and they have float('inf'), so we want to return
+		# that node
 		if dist <= currMinDist:
 			vertexResult = vertex
 			currMinDist = dist
