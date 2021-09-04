@@ -24,6 +24,26 @@ class Node:
     	return arr
 
 # 2 Single Cycle Check
+# mine
+def hasSingleCycle(arr):
+    if len(arr) <= 1:
+		return True
+	
+	nums = [False for _ in arr]
+	i = 0
+	while not all(nums):
+		i = helper(arr, i)
+		if nums[i]:
+			return False
+		nums[i] = True
+		
+	return True
+		
+def helper(arr, i):
+	new = arr[i] + i
+	return new % len(arr)
+
+# not mine
 def hasSingleCycle(arr):
 	explored = 0
 	curr = 0
